@@ -16,12 +16,16 @@ for problem in [sphere, ktablet, bohachevsky, ackley, schaffer, rastrigin]:
 
 	for i in range(30):
 		jgg = JGG(n, 6 * n, n + 1, 6 * n, sphere)
-		jgg.until(1e-7)
-		jgg_counts.append(len(jgg.history))
+		result = jgg.until(1e-7, 300000)
+		if result:
+			jgg_counts.append(len(jgg.history))
+		else:
+			print("jgg failed", problem.__name__)
 
 		bgg = BGG(n, 6 * n, n + 1, 6 * n, sphere)
-		bgg.until(1e-7)
-		bgg_counts.append(len(bgg.history))
+		result = bgg.until(1e-7, 300000)
+		if result:
+			bgg_counts.append(len(bgg.history))
 
 	print(problem.__name__)
 	print("jgg:", np.average(jgg_counts))

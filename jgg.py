@@ -47,11 +47,12 @@ class JGG:
 		elites = self.selection_for_survival(children)
 		self.population.extend(elites)
 
-	def until(self, goal):
-		while True:
+	def until(self, goal, max_alt_count):
+		for _ in range(max_alt_count):
 			self.alternation()
 			if self.get_best_fitness() < goal:
-				break
+				return True
+		return False
 
 	def get_best_fitness(self):
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
