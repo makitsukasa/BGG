@@ -58,7 +58,7 @@ class JGG:
 		return self.population[0].fitness
 
 	def get_eval_count(self):
-		return len(history) * nchi
+		return len(self.history) * self.nchi
 
 if __name__ == '__main__':
 	n = 20
