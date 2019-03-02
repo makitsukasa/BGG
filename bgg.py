@@ -42,10 +42,8 @@ class BGG:
 		return children
 
 	def selection_for_survival(self, parents, children):
-		family = children
-		family.extend(parents)
-		family.sort(key = lambda i: i.fitness)
-		return family[:self.npar]
+		children.sort(key = lambda i: i.fitness)
+		return children[:self.npar]
 
 	def evaluate(self, pop):
 		for individual in pop:
