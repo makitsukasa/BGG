@@ -58,9 +58,18 @@ class BGG:
 		elites = self.selection_for_survival(parents, children)
 		self.population.extend(elites)
 
-	def get_best_evaluation_value(self):
+	def until(self, goal):
+		while True:
+			self.alternation()
+			if self.get_best_fitness() < goal:
+				break
+
+	def get_best_fitness(self):
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
-		return self.population[0].fitness, self.population[0].gene
+		return self.population[0].fitness
+
+	def get_eval_count(self):
+		return len(history) * nchi
 
 if __name__ == '__main__':
 	n = 20
@@ -68,7 +77,7 @@ if __name__ == '__main__':
 
 	for i in range(230):
 		ga.alternation()
-	print(ga.get_best_evaluation_value())
+	# print(ga.get_best_evaluation_value())
 
 	for h in ga.history:
 		print(h)
