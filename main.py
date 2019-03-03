@@ -2,11 +2,14 @@ import numpy as np
 from jgg import JGG
 from bgg import BGG
 from problem.frontier.sphere import sphere
+import warnings
 from problem.frontier.ktablet import ktablet
 from problem.frontier.bohachevsky import bohachevsky
 from problem.frontier.ackley import ackley
 from problem.frontier.schaffer import schaffer
 from problem.frontier.rastrigin import rastrigin
+
+warnings.simplefilter("error", RuntimeWarning)
 
 n = 20
 
