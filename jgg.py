@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
 	for i in range(230):
 		ga.alternation()
-	print(ga.get_best_evaluation_value())
+	print(ga.get_best_fitness())
 
 	for h in ga.history:
 		print(h)
