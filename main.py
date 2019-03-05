@@ -15,11 +15,11 @@ n = 20
 
 problems = [
 	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * n, "nchi" : 8 * n},
-	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  6 * n, "nchi" : 6 * n},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * n, "nchi" : 8 * n},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
 for problem in problems:
@@ -33,14 +33,15 @@ for problem in problems:
 	print(name)
 
 	for i in range(100):
+		seed = np.random.randint(0, 0x7fffffff)
+		np.random.seed(seed)
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, 300000 // nchi)
 		if result:
 			jgg_counts.append(len(jgg.history))
 		else:
 			print("jgg failed")
-			for h in jgg.history:
-				print(h)
+			print("seed :", seed)
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		result = bgg.until(1e-7, 300000 // nchi)
