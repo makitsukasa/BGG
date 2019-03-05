@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	n = 20
 	ga = JGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 
-	for i in range(230):
+	for i in range(250):
 		ga.alternation()
 	print(ga.get_best_fitness())
 
