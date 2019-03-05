@@ -33,9 +33,11 @@ for problem in problems:
 	print(name)
 
 	for i in range(100):
-		seed = np.random.randint(0, 0x7fffffff)
+		seed = 1039522760
+		# seed = 1439646204
 		np.random.seed(seed)
 		jgg = JGG(n, npop, n + 1, nchi, func)
+		np.random.seed()
 		result = jgg.until(1e-7, 300000 // nchi)
 		if result:
 			jgg_counts.append(len(jgg.history))
