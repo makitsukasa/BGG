@@ -1,13 +1,13 @@
 import numpy as np
+import warnings
 from jgg import JGG
 from bgg import BGG
-import warnings
-from problem.frontier.sphere import sphere
-from problem.frontier.ktablet import ktablet
+from problem.frontier.sphere      import sphere
+from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
-from problem.frontier.ackley import ackley
-from problem.frontier.schaffer import schaffer
-from problem.frontier.rastrigin import rastrigin
+from problem.frontier.ackley      import ackley
+from problem.frontier.schaffer    import schaffer
+from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
@@ -39,8 +39,6 @@ for problem in problems:
 			jgg_counts.append(len(jgg.history))
 		else:
 			print("jgg failed")
-			for h in jgg.history:
-				print(h)
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		result = bgg.until(1e-7, 300000 // nchi)
