@@ -1,3 +1,5 @@
+import datetime
+import plot
 import numpy as np
 from individual import Individual
 
@@ -68,9 +70,13 @@ if __name__ == '__main__':
 	n = 20
 	ga = JGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 
-	for i in range(250):
+	while ga.eval_count < 30000:
 		ga.alternation()
-	print(ga.get_best_fitness())
 
-	for h in ga.history:
-		print(h)
+	filename = "benchmark/{0:%Y-%m-%d_%H-%M-%S}.csv".format(datetime.datetime.now())
+	with open(filename, "w") as f:
+		for c, v in ga.history.items():
+			f.write("{0},{1}\n".format(c, v))
+		f.close()
+
+	plot.plot(filename)
