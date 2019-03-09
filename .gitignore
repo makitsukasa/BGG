@@ -1,3 +1,4 @@
 **/__pycache__/*
 **/hoge*
 /benchmark/*
+!/benchmark/d&d_csv_to_plot.bat

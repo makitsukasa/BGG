@@ -1,3 +1,4 @@
+import sys
 import csv
 import matplotlib.pyplot as plt
 
@@ -19,7 +20,10 @@ def plot(filenames):
 	plt.show()
 
 if __name__ == '__main__':
-	plot([
-		"benchmark/2019-03-10_03-13-11.csv",
-		"benchmark/2019-03-10_03-13-20.csv",
-	])
+	if len(sys.argv) > 1:
+		plot(sys.argv[1:])
+	else:
+		plot([
+			"benchmark/2019-03-10_03-13-11.csv",
+			"benchmark/2019-03-10_03-13-20.csv",
+		])
