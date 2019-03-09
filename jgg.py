@@ -8,11 +8,12 @@ class JGG:
 		self.n = n
 		self.npar = npar
 		self.nchi = nchi
+		self.eval_count = 0
 		self.problem = problem
 		self.population = [Individual(self.n) for i in range(npop)]
-		self.history = []
-		self.history.append(np.average([self.problem(i.gene) for i in self.population]))
-		# self.history.append(np.amin([self.problem(i.gene) for i in self.population]))
+		self.history = {}
+		self.history[0] = np.average([self.problem(i.gene) for i in self.population])
+		# self.history[0] = np.amin([i.fitness for i in self.population])
 
 	def selection_for_reproduction(self):
 		np.random.shuffle(self.population)
@@ -37,7 +38,8 @@ class JGG:
 	def evaluate(self, pop):
 		for individual in pop:
 			individual.fitness = self.problem(individual.gene)
-		self.history.append(np.average([i.fitness for i in pop]))
+		self.eval_count += len(pop)
+		self.history[self.eval_count] = np.average([i.fitness for i in pop])
 		return pop
 
 	def alternation(self):

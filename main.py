@@ -36,14 +36,14 @@ for problem in problems:
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, 300000 // nchi)
 		if result:
-			jgg_counts.append(len(jgg.history))
+			jgg_counts.append(jgg.eval_count)
 		else:
 			print("jgg failed")
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		result = bgg.until(1e-7, 300000 // nchi)
 		if result:
-			bgg_counts.append(len(bgg.history))
+			bgg_counts.append(bgg.eval_count)
 		else:
 			print("bgg failed")
 

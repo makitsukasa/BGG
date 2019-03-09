@@ -6,13 +6,14 @@ class BGG:
 		self.n = n
 		self.npar = npar
 		self.nchi = nchi
+		self.eval_count = 0
 		self.problem = problem
 		self.population = [Individual(self.n) for i in range(npop)]
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
-		self.history = []
-		self.history.append(np.average([i.fitness for i in self.population]))
-		# self.history.append(np.amin([i.fitness for i in self.population]))
+		self.history = {}
+		self.history[0] = np.average([i.fitness for i in self.population])
+		# self.history[0] = np.amin([i.fitness for i in self.population])
 
 	def barometer(self):
 		l = len(self.history)
@@ -48,7 +49,8 @@ class BGG:
 	def evaluate(self, pop):
 		for individual in pop:
 			individual.fitness = self.problem(individual.gene)
-		self.history.append(np.average([i.fitness for i in pop]))
+		self.eval_count += len(pop)
+		self.history[self.eval_count] = np.average([i.fitness for i in pop])
 		return pop
 
 	def alternation(self):
@@ -69,9 +71,6 @@ class BGG:
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
 
-	def get_eval_count(self):
-		return len(self.history) * self.nchi
-
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
@@ -80,5 +79,5 @@ if __name__ == '__main__':
 		ga.alternation()
 	# print(ga.get_best_evaluation_value())
 
-	for h in ga.history:
-		print(h)
+	for c, v in ga.history.items():
+		print(c, v)
