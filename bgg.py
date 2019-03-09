@@ -12,8 +12,7 @@ class BGG:
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
 		self.history = {}
-		self.history[0] = np.average([i.fitness for i in self.population])
-		# self.history[0] = np.amin([i.fitness for i in self.population])
+		self.history[0] = self.get_best_fitness()
 
 	def barometer(self):
 		l = len(self.history)
@@ -50,7 +49,6 @@ class BGG:
 		for individual in pop:
 			individual.fitness = self.problem(individual.gene)
 		self.eval_count += len(pop)
-		self.history[self.eval_count] = np.average([i.fitness for i in pop])
 		return pop
 
 	def alternation(self):
@@ -59,6 +57,7 @@ class BGG:
 		self.evaluate(children)
 		elites = self.selection_for_survival(parents, children)
 		self.population.extend(elites)
+		self.history[self.eval_count] = self.get_best_fitness()
 
 	def until(self, goal, max_alt_count):
 		for _ in range(max_alt_count):
