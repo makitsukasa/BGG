@@ -12,6 +12,8 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
+SAVE_CSV = False
+
 n = 20
 
 problems = [
@@ -31,11 +33,12 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	jgg_counts = []
-	bgg_counts = []
+	bgg_barometric_counts = []
+	bgg_fixed_counts = []
 
 	print(name)
 
-	for i in range(100):
+	for i in range(1):
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, 300000)
 		if result:
@@ -43,24 +46,43 @@ for problem in problems:
 		else:
 			print("jgg failed")
 
-		filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
-		with open(filename, "w") as f:
-			for c, v in jgg.history.items():
-				f.write("{0},{1}\n".format(c, v))
-			f.close()
+		if SAVE_CSV:
+			filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in jgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_fixed
 		result = bgg.until(1e-7, 300000)
 		if result:
-			bgg_counts.append(bgg.eval_count)
+			bgg_fixed_counts.append(bgg.eval_count)
 		else:
-			print("bgg failed")
+			print("bgg fixed failed")
 
-		filename = "benchmark/{0}_bgg_{1}_{2}.csv".format(datestr, name, i)
-		with open(filename, "w") as f:
-			for c, v in bgg.history.items():
-				f.write("{0},{1}\n".format(c, v))
-			f.close()
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_b_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_barotmetic
+		result = bgg.until(1e-7, 300000)
+		if result:
+			bgg_barometric_counts.append(bgg.eval_count)
+		else:
+			print("bgg barometric failed")
+
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_f_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
 
 	print("jgg:", np.average(jgg_counts))
-	print("bgg:", np.average(bgg_counts))
+	print("bgg_fixed:", np.average(bgg_fixed_counts))
+	print("bgg_barometric:", np.average(bgg_barometric_counts))

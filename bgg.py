@@ -7,7 +7,6 @@ class BGG:
 	def __init__(self, n, npop, npar, nchi, problem):
 		self.n = n
 		self.npar = npar
-		self.nchi = nchi
 		self.max_nchi = nchi
 		self.eval_count = 0
 		self.problem = problem
@@ -34,8 +33,7 @@ class BGG:
 	def crossover(self, parents):
 		mu = len(parents)
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
-		self.nchi = max(int(self.barometer() * self.max_nchi), 2 * self.npar)
-		children = [Individual(self.n) for i in range(self.nchi)]
+		children = [Individual(self.n) for i in range(self.get_nchi())]
 		for child in children:
 			epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
 			child.gene = mean + np.sum(
@@ -71,9 +69,16 @@ class BGG:
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
 
+	def get_nchi_fixed(self):
+		return self.max_nchi
+
+	def get_nchi_barotmetic(self):
+		return max(int(self.barometer() * self.max_nchi), 2 * self.npar)
+
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
+	ga.get_nchi = ga.get_nchi_fixed
 
 	while ga.eval_count < 30000:
 		ga.alternation()
