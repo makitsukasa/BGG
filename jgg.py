@@ -52,8 +52,8 @@ class JGG:
 		self.population.extend(elites)
 		self.history[self.eval_count] = self.get_best_fitness()
 
-	def until(self, goal, max_alt_count):
-		for _ in range(max_alt_count):
+	def until(self, goal, max_eval_count):
+		while self.eval_count < max_eval_count:
 			self.alternation()
 			if self.get_best_fitness() < goal:
 				return True

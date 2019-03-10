@@ -32,16 +32,16 @@ for problem in problems:
 
 	print(name)
 
-	for i in range(100):
+	for i in range(1):
 		jgg = JGG(n, npop, n + 1, nchi, func)
-		result = jgg.until(1e-7, 300000 // nchi)
+		result = jgg.until(1e-7, 300000)
 		if result:
 			jgg_counts.append(jgg.eval_count)
 		else:
 			print("jgg failed")
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
-		result = bgg.until(1e-7, 300000 // nchi)
+		result = bgg.until(1e-7, 300000)
 		if result:
 			bgg_counts.append(bgg.eval_count)
 		else:
