@@ -8,6 +8,7 @@ class BGG:
 		self.n = n
 		self.npar = npar
 		self.nchi = nchi
+		self.max_nchi = nchi
 		self.eval_count = 0
 		self.problem = problem
 		self.population = [Individual(self.n) for i in range(npop)]
@@ -33,6 +34,7 @@ class BGG:
 	def crossover(self, parents):
 		mu = len(parents)
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
+		self.nchi = max(int(self.barometer() * self.max_nchi), self.npar)
 		children = [Individual(self.n) for i in range(self.nchi)]
 		for child in children:
 			epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
