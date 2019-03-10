@@ -34,7 +34,7 @@ class BGG:
 	def crossover(self, parents):
 		mu = len(parents)
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
-		self.nchi = max(int(self.barometer() * self.max_nchi), self.npar)
+		self.nchi = max(int(self.barometer() * self.max_nchi), 2 * self.npar)
 		children = [Individual(self.n) for i in range(self.nchi)]
 		for child in children:
 			epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
