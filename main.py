@@ -22,6 +22,8 @@ problems = [
 	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
+datestr = "{0:%Y-%m-%d_%H-%M-%S}.csv".format(datetime.datetime.now())
+
 for problem in problems:
 	func = problem["func"]
 	name = problem["name"]
@@ -40,12 +42,24 @@ for problem in problems:
 		else:
 			print("jgg failed")
 
+		filename = "benchmark/{0}_jgg_{1}.csv".format(datestr, name)
+		with open(filename, "w") as f:
+			for c, v in ga.history.items():
+				f.write("{0},{1}\n".format(c, v))
+			f.close()
+
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		result = bgg.until(1e-7, 300000)
 		if result:
 			bgg_counts.append(bgg.eval_count)
 		else:
 			print("bgg failed")
+
+		filename = "benchmark/{0}_bgg_{1}.csv".format(datestr, name)
+		with open(filename, "w") as f:
+			for c, v in ga.history.items():
+				f.write("{0},{1}\n".format(c, v))
+			f.close()
 
 	print("jgg:", np.average(jgg_counts))
 	print("bgg:", np.average(bgg_counts))
