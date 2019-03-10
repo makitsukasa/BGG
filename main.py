@@ -23,7 +23,7 @@ problems = [
 	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
-datestr = "{0:%Y-%m-%d_%H-%M-%S}.csv".format(datetime.datetime.now())
+datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
 
 for problem in problems:
 	func = problem["func"]
@@ -35,7 +35,7 @@ for problem in problems:
 
 	print(name)
 
-	for i in range(1):
+	for i in range(100):
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, 300000)
 		if result:
@@ -43,7 +43,7 @@ for problem in problems:
 		else:
 			print("jgg failed")
 
-		filename = "benchmark/{0}_jgg_{1}.csv".format(datestr, name)
+		filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
 		with open(filename, "w") as f:
 			for c, v in jgg.history.items():
 				f.write("{0},{1}\n".format(c, v))
@@ -56,7 +56,7 @@ for problem in problems:
 		else:
 			print("bgg failed")
 
-		filename = "benchmark/{0}_bgg_{1}.csv".format(datestr, name)
+		filename = "benchmark/{0}_bgg_{1}_{2}.csv".format(datestr, name, i)
 		with open(filename, "w") as f:
 			for c, v in bgg.history.items():
 				f.write("{0},{1}\n".format(c, v))
