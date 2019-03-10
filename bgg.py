@@ -17,10 +17,7 @@ class BGG:
 		self.history[0] = self.get_best_fitness()
 
 	def barometer(self):
-		l = len(self.history)
-		if l > 10:
-			return 1.0
-		return l / 10
+		return min(self.eval_count / 1200, 1.0)
 
 	def selection_for_reproduction(self):
 		self.population.sort(key = lambda i: i.fitness)
