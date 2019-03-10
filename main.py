@@ -1,3 +1,4 @@
+import datetime
 import numpy as np
 import warnings
 from jgg import JGG
@@ -44,7 +45,7 @@ for problem in problems:
 
 		filename = "benchmark/{0}_jgg_{1}.csv".format(datestr, name)
 		with open(filename, "w") as f:
-			for c, v in ga.history.items():
+			for c, v in jgg.history.items():
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
@@ -57,7 +58,7 @@ for problem in problems:
 
 		filename = "benchmark/{0}_bgg_{1}.csv".format(datestr, name)
 		with open(filename, "w") as f:
-			for c, v in ga.history.items():
+			for c, v in bgg.history.items():
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
