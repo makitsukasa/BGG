@@ -55,11 +55,12 @@ for problem in problems:
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
+		bgg.selection_for_reproduction = bgg.selection_for_reproduction_sloped_rand
 		result = bgg.until(1e-7, 300000)
 		if result:
 			bgg_fixed_counts.append(bgg.eval_count)
 		else:
-			print("bgg fixed failed")
+			print("bgg (nchi:fixed,repr:slope) failed")
 
 		if SAVE_CSV:
 			filename = "benchmark/{0}_bgg_b_{1}_{2}.csv".format(datestr, name, i)
@@ -70,11 +71,12 @@ for problem in problems:
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
+		bgg.selection_for_reproduction = bgg.selection_for_reproduction_sloped_rand
 		result = bgg.until(1e-7, 300000)
 		if result:
 			bgg_barometric_counts.append(bgg.eval_count)
 		else:
-			print("bgg barometric failed")
+			print("bgg (nchi:barom,repr:slope) failed")
 
 		if SAVE_CSV:
 			filename = "benchmark/{0}_bgg_f_{1}_{2}.csv".format(datestr, name, i)

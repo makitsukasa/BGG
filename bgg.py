@@ -19,17 +19,6 @@ class BGG:
 	def barometer(self):
 		return min(self.eval_count / 1200, 1.0)
 
-	def selection_for_reproduction(self):
-		self.population.sort(key = lambda i: i.fitness)
-		best = self.population[0].fitness
-		worst = self.population[-1].fitness
-		b = self.barometer()
-		self.population.sort(key = lambda i:
-			b * (best + np.random.rand() * (worst - best)) + (1.0 - b) * i.fitness)
-		parents = self.population[:self.npar]
-		self.population = self.population[self.npar:]
-		return parents
-
 	def crossover(self, parents):
 		mu = len(parents)
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
@@ -75,10 +64,33 @@ class BGG:
 	def get_nchi_barotmetic(self):
 		return max(int(self.barometer() * self.max_nchi), 2 * self.npar)
 
+	def selection_for_reproduction_sloped_rand(self):
+		self.population.sort(key = lambda i: i.fitness)
+		best = self.population[0].fitness
+		worst = self.population[-1].fitness
+		b = self.barometer()
+		self.population.sort(key = lambda i:
+			b * (best + np.random.rand() * (worst - best)) + (1.0 - b) * i.fitness)
+		parents = self.population[:self.npar]
+		self.population = self.population[self.npar:]
+		return parents
+
+	def selection_for_reproduction_partitioned(self):
+		random_num = int(self.npar * self.barometer())
+		elite_num = self.npar - random_num
+		np.random.shuffle(self.population)
+		randoms = self.population[:random_num]
+		self.population.sort(key = lambda i: i.fitness)
+		elites = self.population[:elite_num]
+		ans = randoms
+		ans.extend(elites)
+		return ans
+
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 	ga.get_nchi = ga.get_nchi_fixed
+	ga.selection_for_reproduction = ga.selection_for_reproduction_partitioned
 
 	while ga.eval_count < 30000:
 		ga.alternation()
