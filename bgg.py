@@ -76,7 +76,7 @@ class BGG:
 		return parents
 
 	def selection_for_reproduction_partitioned(self):
-		random_num = min(int(self.npar * self.barometer() * 2), self.npar)
+		random_num = min(int(self.npar * self.barometer()), self.npar)
 		elite_num = self.npar - random_num
 		np.random.shuffle(self.population)
 		randoms = self.population[:random_num]
@@ -90,7 +90,7 @@ if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 	ga.get_nchi = ga.get_nchi_fixed
-	ga.selection_for_reproduction = ga.selection_for_reproduction_partitioned
+	ga.selection_for_reproduction = ga.selection_for_reproduction_sloped_rand
 
 	while ga.eval_count < 30000:
 		ga.alternation()

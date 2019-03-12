@@ -12,17 +12,17 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_CSV = False
+SAVE_CSV = True
 
 n = 20
 
 problems = [
 	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * n, "nchi" : 8 * n},
-	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  6 * n, "nchi" : 6 * n},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * n, "nchi" : 8 * n},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
 datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
@@ -63,7 +63,7 @@ for problem in problems:
 			print("bgg (nchi:fixed,repr:slope) failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_b_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_bgg_f_s_{1}_{2}.csv".format(datestr, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
@@ -79,7 +79,39 @@ for problem in problems:
 			print("bgg (nchi:barom,repr:slope) failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_f_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_bgg_b_s_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_fixed
+		bgg.selection_for_reproduction = bgg.selection_for_reproduction_partitioned
+		result = bgg.until(1e-7, max_eval_count)
+		if result:
+			bgg_fixed_counts.append(bgg.eval_count)
+		else:
+			print("bgg (nchi:fixed,repr:part) failed")
+
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_f_p_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_barotmetic
+		bgg.selection_for_reproduction = bgg.selection_for_reproduction_partitioned
+		result = bgg.until(1e-7, max_eval_count)
+		if result:
+			bgg_barometric_counts.append(bgg.eval_count)
+		else:
+			print("bgg (nchi:barom,repr:part) failed")
+
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_b_p_{1}_{2}.csv".format(datestr, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
