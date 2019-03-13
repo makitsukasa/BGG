@@ -29,7 +29,7 @@ class BGG:
 				[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
 		return children
 
-	def selection_for_survival(self, parents, children):
+	def select_for_survival(self, parents, children):
 		children.sort(key = lambda i: i.fitness)
 		return children[:self.npar]
 
@@ -40,10 +40,10 @@ class BGG:
 		return pop
 
 	def alternation(self):
-		parents = self.selection_for_reproduction()
+		parents = self.select_for_reproduction()
 		children = self.crossover(parents)
 		self.evaluate(children)
-		elites = self.selection_for_survival(parents, children)
+		elites = self.select_for_survival(parents, children)
 		self.population.extend(elites)
 		self.history[self.eval_count] = self.get_best_fitness()
 
@@ -64,7 +64,7 @@ class BGG:
 	def get_nchi_barotmetic(self):
 		return max(int(self.barometer() * self.max_nchi), 2 * self.npar)
 
-	def selection_for_reproduction_sloped_rand(self):
+	def select_for_reproduction_sloped_rand(self):
 		self.population.sort(key = lambda i: i.fitness)
 		best = self.population[0].fitness
 		worst = self.population[-1].fitness
@@ -75,7 +75,7 @@ class BGG:
 		self.population = self.population[self.npar:]
 		return parents
 
-	def selection_for_reproduction_partitioned(self):
+	def select_for_reproduction_partitioned(self):
 		random_num = int(self.npar * self.barometer())
 		elite_num = self.npar - random_num
 		np.random.shuffle(self.population)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 	ga.get_nchi = ga.get_nchi_fixed
-	ga.selection_for_reproduction = ga.selection_for_reproduction_partitioned
+	ga.select_for_reproduction = ga.select_for_reproduction_partitioned
 
 	while ga.eval_count < 30000:
 		ga.alternation()

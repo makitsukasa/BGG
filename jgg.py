@@ -3,8 +3,6 @@ import plot
 import numpy as np
 from individual import Individual
 
-# 用語は 遺伝的アルゴリズムにおける世代交代モデルの提案と評価(佐藤，97)による
-
 class JGG:
 	def __init__(self, n, npop, npar, nchi, problem):
 		self.n = n
@@ -18,7 +16,7 @@ class JGG:
 		self.history = {}
 		self.history[0] = self.get_best_fitness()
 
-	def selection_for_reproduction(self):
+	def select_for_reproduction(self):
 		np.random.shuffle(self.population)
 		parents = self.population[:self.npar]
 		self.population = self.population[self.npar:]
@@ -34,7 +32,7 @@ class JGG:
 				[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
 		return children
 
-	def selection_for_survival(self, children):
+	def select_for_survival(self, children):
 		children.sort(key = lambda child: child.fitness)
 		return children[:self.npar]
 
