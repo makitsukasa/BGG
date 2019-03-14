@@ -1,2 +1,0 @@
-cd ..
-python plot.py %*

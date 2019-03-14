@@ -1,8 +1,9 @@
 import sys
+import argparse
 import csv
 import matplotlib.pyplot as plt
 
-def plot(filenames):
+def plot(filenames, log_scaled = False):
 	if isinstance(filenames, str):
 		filenames = [filenames]
 
@@ -16,15 +17,21 @@ def plot(filenames):
 				y.append(row[1])
 			plt.plot(x, y, linewidth = 0.5, label = filename.split("\\")[-1].split(".")[0])
 
-	plt.yscale("log")
+	if log_scaled:
+		plt.yscale("log")
 	plt.legend()
 	plt.show()
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:
-		plot(sys.argv[1:])
+		parser = argparse.ArgumentParser()
+		parser.add_argument("-f", "--files", nargs = "*")
+		parser.add_argument("-l", "--log_scaled", action = "store_true")
+		args = parser.parse_args()
+		plot(args.files, args.log_scaled)
 	else:
 		plot([
-			"benchmark/2019-03-10_03-13-11.csv",
-			"benchmark/2019-03-10_03-13-20.csv",
+			"benchmark\\fixed_bgg_sphere.csv",
+			"benchmark\\variable_bgg_sphere.csv",
+			"benchmark\\jgg_sphere.csv",
 		])
