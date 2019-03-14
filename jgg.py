@@ -43,10 +43,10 @@ class JGG:
 		return pop
 
 	def alternation(self):
-		parents = self.selection_for_reproduction()
+		parents = self.select_for_reproduction()
 		children = self.crossover(parents)
 		self.evaluate(children)
-		elites = self.selection_for_survival(children)
+		elites = self.select_for_survival(children)
 		self.population.extend(elites)
 		self.history[self.eval_count] = self.get_best_fitness()
 

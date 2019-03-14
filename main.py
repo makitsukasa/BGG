@@ -35,12 +35,13 @@ for problem in problems:
 	jgg_counts = []
 	bgg_barometric_counts = []
 	bgg_fixed_counts = []
+	max_eval_count = 300000
 
 	print(name)
 
 	for i in range(1):
 		jgg = JGG(n, npop, n + 1, nchi, func)
-		result = jgg.until(1e-7, 300000)
+		result = jgg.until(1e-7, max_eval_count)
 		if result:
 			jgg_counts.append(jgg.eval_count)
 		else:
@@ -56,7 +57,7 @@ for problem in problems:
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_sloped_rand
-		result = bgg.until(1e-7, 300000)
+		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			bgg_fixed_counts.append(bgg.eval_count)
 		else:
@@ -72,7 +73,7 @@ for problem in problems:
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_sloped_rand
-		result = bgg.until(1e-7, 300000)
+		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			bgg_barometric_counts.append(bgg.eval_count)
 		else:
@@ -87,7 +88,7 @@ for problem in problems:
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
-		bgg.selection_for_reproduction = bgg.selection_for_reproduction_partitioned
+		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			bgg_fixed_counts.append(bgg.eval_count)
@@ -103,7 +104,7 @@ for problem in problems:
 
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.selection_for_reproduction = bgg.selection_for_reproduction_partitioned
+		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			bgg_barometric_counts.append(bgg.eval_count)

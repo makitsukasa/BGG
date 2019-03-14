@@ -76,7 +76,7 @@ class BGG:
 		self.population = self.population[self.npar:]
 		return parents
 
-	def selection_for_reproduction_partitioned(self):
+	def select_for_reproduction_partitioned(self):
 		random_num = min(int(self.npar * self.barometer()), self.npar)
 		elite_num = self.npar - random_num
 		self.population.sort(key = lambda i: i.fitness)
