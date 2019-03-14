@@ -7,6 +7,7 @@ class BGG:
 	def __init__(self, n, npop, npar, nchi, problem):
 		self.n = n
 		self.npar = npar
+		self.npop = npop
 		self.max_nchi = nchi
 		self.eval_count = 0
 		self.problem = problem
@@ -86,14 +87,26 @@ class BGG:
 		ans.extend(elites)
 		return ans
 
+	def select_for_reproduction_restricted(self):
+		b = self.barometer()
+		self.population.sort(key = lambda i: i.fitness)
+		r = max(self.npar, int(self.npop * b))
+		restricted_pop = self.population[:r]
+		self.population = self.population[r:]
+		np.random.shuffle(restricted_pop)
+		ans = restricted_pop[:self.npar]
+		self.population.extend(restricted_pop[self.npar:])
+		return ans
+
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 	ga.get_nchi = ga.get_nchi_fixed
-	ga.select_for_reproduction = ga.select_for_reproduction_partitioned
+	ga.select_for_reproduction = ga.select_for_reproduction_restricted
 
 	while ga.eval_count < 30000:
 		ga.alternation()
+	print(ga.get_best_fitness(), ga.eval_count)
 
 	filename = "benchmark/{0:%Y-%m-%d_%H-%M-%S}.csv".format(datetime.datetime.now())
 	with open(filename, "w") as f:
