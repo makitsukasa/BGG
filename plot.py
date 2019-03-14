@@ -16,7 +16,7 @@ def plot(filenames):
 				y.append(row[1])
 			plt.plot(x, y, linewidth = 0.5)
 
-	plt.yscale("log")
+	# plt.yscale("log")
 	plt.show()
 
 if __name__ == '__main__':

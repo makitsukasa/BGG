@@ -76,13 +76,15 @@ class BGG:
 		self.population = self.population[self.npar:]
 		return parents
 
-	def select_for_reproduction_partitioned(self):
-		random_num = int(self.npar * self.barometer())
+	def selection_for_reproduction_partitioned(self):
+		random_num = min(int(self.npar * self.barometer()), self.npar)
 		elite_num = self.npar - random_num
-		np.random.shuffle(self.population)
-		randoms = self.population[:random_num]
 		self.population.sort(key = lambda i: i.fitness)
 		elites = self.population[:elite_num]
+		self.population = self.population[elite_num:]
+		np.random.shuffle(self.population)
+		randoms = self.population[:random_num]
+		self.population = self.population[random_num:]
 		ans = randoms
 		ans.extend(elites)
 		return ans
