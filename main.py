@@ -36,10 +36,11 @@ for problem in problems:
 	bgg_barometric_counts = []
 	bgg_fixed_counts = []
 	max_eval_count = 300000
+	loop_count = 10000
 
-	print(name)
+	print(name, loop_count)
 
-	for i in range(1):
+	for i in range(loop_count):
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, max_eval_count)
 		if result:
@@ -113,6 +114,38 @@ for problem in problems:
 
 		if SAVE_CSV:
 			filename = "benchmark/{0}_bgg_b_p_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_fixed
+		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
+		result = bgg.until(1e-7, max_eval_count)
+		if result:
+			bgg_fixed_counts.append(bgg.eval_count)
+		else:
+			print("bgg (nchi:fixed,repr:rest) failed")
+
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_f_r_{1}_{2}.csv".format(datestr, name, i)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_barotmetic
+		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
+		result = bgg.until(1e-7, max_eval_count)
+		if result:
+			bgg_barometric_counts.append(bgg.eval_count)
+		else:
+			print("bgg (nchi:barom,repr:rest) failed")
+
+		if SAVE_CSV:
+			filename = "benchmark/{0}_bgg_b_r_{1}_{2}.csv".format(datestr, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))

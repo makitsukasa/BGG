@@ -14,9 +14,10 @@ def plot(filenames):
 			for row in reader:
 				x.append(row[0])
 				y.append(row[1])
-			plt.plot(x, y, linewidth = 0.5)
+			plt.plot(x, y, linewidth = 0.5, label = filename.split("\\")[-1].split(".")[0])
 
-	# plt.yscale("log")
+	plt.yscale("log")
+	plt.legend()
 	plt.show()
 
 if __name__ == '__main__':
