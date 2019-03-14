@@ -90,9 +90,13 @@ class BGG:
 	def select_for_reproduction_restricted(self):
 		b = self.barometer()
 		self.population.sort(key = lambda i: i.fitness)
-		restricted_pop = self.population[:max(self.npar, int(self.npop * b))]
+		r = max(self.npar, int(self.npop * b))
+		restricted_pop = self.population[:r]
+		self.population = self.population[r:]
 		np.random.shuffle(restricted_pop)
-		return restricted_pop[:self.npar]
+		ans = restricted_pop[:self.npar]
+		self.population.extend(restricted_pop[self.npar:])
+		return ans
 
 if __name__ == '__main__':
 	n = 20
