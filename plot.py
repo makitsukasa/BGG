@@ -2,6 +2,11 @@ import sys
 import argparse
 import csv
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+font = {"family": "Noto Sans MONO CJK JP"}
+mpl.rc('font', **font)
+plt.rcParams["mathtext.default"] = "regular"
 
 def plot(filenames, log_scaled = False):
 	if isinstance(filenames, str):
@@ -31,7 +36,7 @@ if __name__ == '__main__':
 		plot(args.files, args.log_scaled)
 	else:
 		plot([
-			"benchmark\\fixed_bgg_sphere.csv",
-			"benchmark\\variable_bgg_sphere.csv",
-			"benchmark\\jgg_sphere.csv",
+			"benchmark\\JGG.csv",
+			"benchmark\\BGG(子個体数固定，親加重和順).csv",
+			"benchmark\\BGG(子個体数可変，親加重和順).csv",
 		])
