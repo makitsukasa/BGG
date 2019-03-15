@@ -12,7 +12,7 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_CSV = True
+SAVE_CSV = False
 
 n = 20
 
@@ -32,21 +32,23 @@ for problem in problems:
 	name = problem["name"]
 	npop = problem["npop"]
 	nchi = problem["nchi"]
-	jgg_counts = []
-	bgg_barometric_counts = []
-	bgg_fixed_counts = []
+	eval_counts = {}
 	max_eval_count = 300000
-	loop_count = 10000
+	loop_count = 100
 
 	print(name, loop_count)
 
 	for i in range(loop_count):
+		method_name = "JGG"
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, max_eval_count)
 		if result:
-			jgg_counts.append(jgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(jgg.eval_count)
+			else:
+				eval_counts[method_name] = [jgg.eval_count]
 		else:
-			print("jgg failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
 			filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
@@ -55,102 +57,131 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数固定,加重和順)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_sloped_rand
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_fixed_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:fixed,repr:slope) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_f_s_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数可変,加重和順)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_sloped_rand
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_barometric_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:barom,repr:slope) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_b_s_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数固定,一部優秀)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_fixed_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:fixed,repr:part) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_f_p_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数可変,一部優秀)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_barometric_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:barom,repr:part) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_b_p_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数固定,親候補限)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_fixed_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:fixed,repr:rest) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_f_r_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "BGG(子数可変,親候補限)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
-			bgg_barometric_counts.append(bgg.eval_count)
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
 		else:
-			print("bgg (nchi:barom,repr:rest) failed")
+			print(method_name, "failed")
 
 		if SAVE_CSV:
-			filename = "benchmark/{0}_bgg_b_r_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
+				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-	print("jgg:", np.average(jgg_counts))
-	print("bgg_fixed:", np.average(bgg_fixed_counts))
-	print("bgg_barometric:", np.average(bgg_barometric_counts))
+	for method_name, counts in eval_counts.items():
+		print(method_name, ":", np.average(counts))
