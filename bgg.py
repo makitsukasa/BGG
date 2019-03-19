@@ -17,9 +17,6 @@ class BGG:
 		self.history = {}
 		self.history[0] = self.get_best_fitness()
 
-	def barometer(self):
-		return min(self.eval_count / 1200, 1.0)
-
 	def crossover(self, parents):
 		mu = len(parents)
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
@@ -100,11 +97,16 @@ class BGG:
 		self.population.extend(restricted_pop[self.npar:])
 		return ans
 
+	def barometer_linear(self, inv_gradient, intercept):
+		return lambda :max(0.0, min(1.0,
+			self.eval_count / inv_gradient + intercept))
+
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
 	ga.get_nchi = ga.get_nchi_fixed
 	ga.select_for_reproduction = ga.select_for_reproduction_restricted
+	ga.barometer = ga.barometer_linear(1200, 0)
 
 	while ga.eval_count < 30000:
 		ga.alternation()
