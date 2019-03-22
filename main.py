@@ -58,7 +58,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,一部優秀,b=x÷600)"
+		method_name = "BGG(子数可変 一部優秀 b=x÷600)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -80,7 +80,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,親候補限,b=x÷600)"
+		method_name = "BGG(子数可変 親候補限 b=x÷600)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -102,7 +102,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,一部優秀,b=x÷600-1)"
+		method_name = "BGG(子数可変 一部優秀 b=x÷600-1)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -124,7 +124,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,親候補限,b=x÷600-1)"
+		method_name = "BGG(子数可変 親候補限 b=x÷600-1)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -146,7 +146,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,一部優秀,b=x÷1200)"
+		method_name = "BGG(子数可変 一部優秀 b=x÷1200)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -168,7 +168,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,親候補限,b=x÷1200)"
+		method_name = "BGG(子数可変 親候補限 b=x÷1200)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -190,7 +190,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,一部優秀,b=x÷1200-1)"
+		method_name = "BGG(子数可変 一部優秀 b=x÷1200-1)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -212,7 +212,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,親候補限,b=x÷1200-1)"
+		method_name = "BGG(子数可変 親候補限 b=x÷1200-1)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -234,7 +234,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,一部優秀,b=x÷2400)"
+		method_name = "BGG(子数可変 一部優秀 b=x÷2400)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -256,7 +256,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変,親候補限,b=x÷2400)"
+		method_name = "BGG(子数可変 親候補限 b=x÷2400)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
