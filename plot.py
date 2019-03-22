@@ -25,6 +25,8 @@ def plot(filenames, log_scaled = False):
 	if log_scaled:
 		plt.yscale("log")
 	plt.legend()
+	plt.xlabel("評価回数")
+	plt.ylabel("評価値")
 	plt.show()
 
 if __name__ == '__main__':
