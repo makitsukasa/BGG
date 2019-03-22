@@ -12,7 +12,8 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_CSV = False
+SAVE_HISTORY_CSV = False
+SAVE_COUNTS_CSV = True
 
 n = 20
 
@@ -34,7 +35,7 @@ for problem in problems:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 300000
-	loop_count = 300
+	loop_count = 1000
 
 	print(name, loop_count, flush = True)
 
@@ -50,7 +51,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
 			with open(filename, "w") as f:
 				for c, v in jgg.history.items():
@@ -71,7 +72,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -93,7 +94,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -115,7 +116,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -137,7 +138,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -159,7 +160,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -181,7 +182,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -203,7 +204,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -225,7 +226,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -247,7 +248,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -269,7 +270,7 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 
-		if SAVE_CSV:
+		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
 				.format(datestr, method_name, name, i)
 			with open(filename, "w") as f:
@@ -277,5 +278,12 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-	for method_name, counts in eval_counts.items():
-		print(method_name, ":", np.average(counts))
+	for method_name, eval_count in eval_counts.items():
+		print(method_name, np.average(eval_count), loop_count - len(eval_count))
+
+		if SAVE_COUNTS_CSV:
+			filename = "benchmark/{0}_{1}_{2}.csv".format(datestr, name, method_name)
+			with open(filename, "w") as f:
+				for c in eval_count:
+					f.write("{}\n".format(c))
+				f.close()
