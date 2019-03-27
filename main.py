@@ -12,17 +12,17 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_HISTORY_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_HISTORY_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
 problems = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
 	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
@@ -35,7 +35,7 @@ for problem in problems:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 300000
-	loop_count = 300
+	loop_count = 1
 
 	print(name, loop_count, flush = True)
 
@@ -52,145 +52,13 @@ for problem in problems:
 			print(method_name, "failed")
 
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_jgg_{1}_{2}.csv".format(datestr, name, i)
+			filename = "benchmark/jgg_{0}.csv".format(name)
 			with open(filename, "w") as f:
 				for c, v in jgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変 一部優秀 b=x÷300)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_linear(300, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 親候補限 b=x÷300)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_linear(300, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 一部優秀 b=x÷600)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_linear(600, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 親候補限 b=x÷600)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_linear(600, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 一部優秀 b=x÷900)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_linear(900, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 親候補限 b=x÷900)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_linear(900, 0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 一部優秀 b=x÷1200)"
+		method_name = "BGG(子数可変 一部優秀)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -205,14 +73,36 @@ for problem in problems:
 			print(method_name, "failed")
 
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変 親候補限 b=x÷1200)"
+		method_name = "BGG(子数固定 親候補限)"
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_fixed
+		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
+		bgg.barometer = bgg.barometer_linear(1200, 0)
+		result = bgg.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(bgg.eval_count)
+			else:
+				eval_counts[method_name] = [bgg.eval_count]
+		else:
+			print(method_name, "failed")
+
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "BGG(子数可変 親候補限)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -227,97 +117,8 @@ for problem in problems:
 			print(method_name, "failed")
 
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 一部優秀 b=x÷1200+0.5)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_linear(1200, 0.5)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 親候補限 b=x÷1200+0.5)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_linear(1200, 0.5)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-
-		method_name = "BGG(子数可変 一部優秀 b=x÷2400+0.5)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_linear(2400, 0.5)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変 親候補限 b=x÷2400+0.5)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_linear(2400, 0.5)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}_{2}_{3}.csv"\
-				.format(datestr, method_name, name, i)
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
