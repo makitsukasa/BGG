@@ -20,7 +20,7 @@ def plot(filenames, log_scaled = False):
 			for row in reader:
 				x.append(row[0])
 				y.append(row[1])
-			plt.plot(x, y, linewidth = 0.5, label = filename.split("\\")[-1].split(".")[0])
+			plt.plot(x, y, linewidth = 0.5, label = filename.split("\\")[-1].replace(".csv", ""))
 
 	if log_scaled:
 		plt.yscale("log")
