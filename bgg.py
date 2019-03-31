@@ -101,7 +101,7 @@ class BGG:
 		return lambda :max(0.0, min(1.0,
 			self.eval_count / inv_gradient + intercept))
 
-	def barometer_locally_constant(self, value, deadline):
+	def barometer_locally_constant(self, deadline, value):
 		return lambda :value if self.eval_count < deadline else 1.0
 
 if __name__ == '__main__':
