@@ -101,6 +101,9 @@ class BGG:
 		return lambda :max(0.0, min(1.0,
 			self.eval_count / inv_gradient + intercept))
 
+	def barometer_locally_constant(self, value, deadline):
+		return lambda :value if self.eval_count < deadline else 1.0
+
 if __name__ == '__main__':
 	n = 20
 	ga = BGG(n, 6 * n, n + 1, 6 * n, lambda x: np.sum((x * 10.24 - 5.12) ** 2))
