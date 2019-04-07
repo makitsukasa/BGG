@@ -210,7 +210,12 @@ for problem in problems:
 				f.close()
 
 	for method_name, best_fitness in best_fitnesses.items():
-		print(method_name, np.average(best_fitness), loop_count - len(best_fitness))
+		print(
+			method_name,
+			np.average(best_fitness),
+			loop_count - len(best_fitness),
+			sep = ","
+		)
 
 		if SAVE_COUNTS_CSV:
 			filename = "benchmark/{0}_{1}.csv".format(name, method_name)
