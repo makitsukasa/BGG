@@ -34,7 +34,7 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 5 * n
+	max_eval_count = 50 * n
 	loop_count = 300
 
 	print(name, loop_count, flush = True)
