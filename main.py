@@ -13,17 +13,17 @@ from problem.frontier.rastrigin   import rastrigin
 warnings.simplefilter("error", RuntimeWarning)
 
 SAVE_HISTORY_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
 problems = [
 	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
-	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
-	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
-	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	{"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
+	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
+	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
+	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
 datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
@@ -93,11 +93,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_一部優秀_b=x÷24000(x＜1200))"
+		method_name = "BGG(子数可変_一部優秀_b=x÷24000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
@@ -112,11 +112,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_親候補限_b=x÷24000(x＜1200))"
+		method_name = "BGG(子数可変_親候補限_b=x÷24000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
@@ -131,11 +131,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_一部優秀_b=x÷12000(x＜1200))"
+		method_name = "BGG(子数可変_一部優秀_b=x÷12000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
@@ -150,11 +150,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_親候補限_b=x÷12000(x＜1200))"
+		method_name = "BGG(子数可変_親候補限_b=x÷12000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
@@ -169,11 +169,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_一部優秀_b=x÷6000(x＜1200))"
+		method_name = "BGG(子数可変_一部優秀_b=x÷6000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
@@ -188,11 +188,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_親候補限_b=x÷6000(x＜1200))"
+		method_name = "BGG(子数可変_親候補限_b=x÷6000-1(x＜1200))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, 0.0)
+		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, -1.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
