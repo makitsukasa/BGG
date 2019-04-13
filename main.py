@@ -34,7 +34,7 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 50 * n
+	max_eval_count = 120000
 	loop_count = 1
 
 	print(name, loop_count, flush = True)
@@ -42,7 +42,7 @@ for problem in problems:
 	for i in range(loop_count):
 		method_name = "JGG"
 		jgg = JGG(n, npop, n + 1, nchi, func)
-		result = jgg.until(1e-7, max_eval_count)
+		result = jgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(jgg.get_best_fitness())
 		else:
@@ -60,7 +60,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -79,7 +79,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -98,7 +98,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -117,7 +117,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -136,7 +136,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -155,7 +155,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -174,7 +174,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
@@ -193,7 +193,7 @@ for problem in problems:
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		result = bgg.until(1e0, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
