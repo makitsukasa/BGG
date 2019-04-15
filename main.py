@@ -33,8 +33,8 @@ for problem in problems:
 	name = problem["name"]
 	npop = problem["npop"]
 	nchi = problem["nchi"]
-	eval_counts = {}
-	max_eval_count = 300000
+	best_fitnesses = {}
+	max_eval_count = 20 * n
 	loop_count = 300
 
 	print(name, loop_count, flush = True)
@@ -43,13 +43,10 @@ for problem in problems:
 		method_name = "JGG"
 		jgg = JGG(n, npop, n + 1, nchi, func)
 		result = jgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(jgg.eval_count)
-			else:
-				eval_counts[method_name] = [jgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(jgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [jgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/jgg_{0}.csv".format(name)
@@ -64,13 +61,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -86,13 +80,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -108,13 +99,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, -0.025)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -130,13 +118,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 24000, -0.025)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -152,13 +137,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, -0.05)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -174,13 +156,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 12000, -0.05)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -196,13 +175,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, -0.1)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -218,13 +194,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_linear(1200, 6000, -0.1)
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
@@ -234,12 +207,17 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-	for method_name, eval_count in eval_counts.items():
-		print(method_name, np.average(eval_count), loop_count - len(eval_count))
+	for method_name, best_fitness in best_fitnesses.items():
+		print(
+			method_name,
+			np.average(best_fitness),
+			loop_count - len(best_fitness),
+			sep = ","
+		)
 
 		if SAVE_COUNTS_CSV:
 			filename = "benchmark/{0}_{1}.csv".format(name, method_name)
 			with open(filename, "w") as f:
-				for c in eval_count:
+				for c in best_fitness:
 					f.write("{}\n".format(c))
 				f.close()
