@@ -13,7 +13,7 @@ from problem.frontier.rastrigin   import rastrigin
 warnings.simplefilter("error", RuntimeWarning)
 
 SAVE_HISTORY_CSV = False
-SAVE_COUNTS_CSV = False
+SAVE_COUNTS_CSV = True
 
 n = 20
 
@@ -34,7 +34,7 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 50 * n
+	max_eval_count = 20 * n
 	loop_count = 300
 
 	print(name, loop_count, flush = True)
