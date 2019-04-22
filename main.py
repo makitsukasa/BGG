@@ -34,8 +34,8 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 20 * n
-	loop_count = 300
+	max_eval_count = 300000
+	loop_count = 1
 
 	print(name, loop_count, flush = True)
 
@@ -47,87 +47,10 @@ for problem in problems:
 			best_fitnesses[method_name].append(jgg.get_best_fitness())
 		else:
 			best_fitnesses[method_name] = [jgg.get_best_fitness()]
-
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/jgg_{0}.csv".format(name)
 			with open(filename, "w") as f:
 				for c, v in jgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜300))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(300, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜300))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(300, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜600))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(600, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜600))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(600, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
@@ -141,12 +64,17 @@ for problem in problems:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
 			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+			filename = "benchmark/dist_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
@@ -160,7 +88,6 @@ for problem in problems:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
 			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
@@ -168,42 +95,10 @@ for problem in problems:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜2400))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/dist_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜2400))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
