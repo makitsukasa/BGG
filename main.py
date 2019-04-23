@@ -41,8 +41,11 @@ for problem in problems:
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		jgg = JGG(n, npop, n + 1, nchi, func)
-		result = jgg.until(1e-7, max_eval_count)
+		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg.get_nchi = bgg.get_nchi_fixed
+		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
+		bgg.barometer = lambda: 1
+		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
 				eval_counts[method_name].append(jgg.eval_count)
@@ -50,11 +53,11 @@ for problem in problems:
 				eval_counts[method_name] = [jgg.eval_count]
 		else:
 			print(method_name, "failed")
-
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/jgg_{0}.csv".format(name)
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in jgg.history.items():
+				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
