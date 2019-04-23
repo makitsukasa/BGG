@@ -15,7 +15,7 @@ class BGG:
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
 		self.history = {0 : self.get_best_fitness()}
-		self.mean_of_distance_history = {0 : None}
+		self.mean_of_distance_history = {}
 
 	def get_distance(one, another):
 		one_array = np.array(one.gene)

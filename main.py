@@ -13,16 +13,17 @@ from problem.frontier.rastrigin   import rastrigin
 warnings.simplefilter("error", RuntimeWarning)
 
 SAVE_HISTORY_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_DISTANCE_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
 problems = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
 	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
@@ -34,7 +35,7 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 300000
+	max_eval_count = 2000
 	loop_count = 1
 
 	print(name, loop_count, flush = True)
@@ -46,13 +47,10 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = lambda: 1
 		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(jgg.eval_count)
-			else:
-				eval_counts[method_name] = [jgg.eval_count]
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
-			print(method_name, "failed")
+			best_fitnesses[method_name] = [bgg.get_best_fitness()]
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
@@ -60,12 +58,15 @@ for problem in problems:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜1200))"
+		method_name = "一部優秀_b=0.0(x＜1200)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
@@ -82,14 +83,15 @@ for problem in problems:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
-			filename = "benchmark/dist_{0}_{1}.csv"\
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜1200))"
+		method_name = "親候補限_b=0.0(x＜1200)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
@@ -106,7 +108,8 @@ for problem in problems:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
-			filename = "benchmark/dist_{0}_{1}.csv"\
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.mean_of_distance_history.items():
