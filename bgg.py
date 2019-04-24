@@ -14,8 +14,18 @@ class BGG:
 		self.population = [Individual(self.n) for i in range(npop)]
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
-		self.history = {}
-		self.history[0] = self.get_best_fitness()
+		self.history = {0 : self.get_best_fitness()}
+		self.mean_of_distance_history = {}
+
+	def calc_mean_of_distance(self, parents):
+		sum_ = 0
+		l = len(parents)
+		for i in range(l):
+			for j in range(i + 1, l):
+				i_th_array = np.array(parents[i].gene)
+				j_th_array = np.array(parents[j].gene)
+				sum_ += np.linalg.norm(i_th_array - j_th_array)
+		return sum_ / (l * (l - 1) / 2)
 
 	def crossover(self, parents):
 		mu = len(parents)
@@ -44,6 +54,8 @@ class BGG:
 		elites = self.select_for_survival(parents, children)
 		self.population.extend(elites)
 		self.history[self.eval_count] = self.get_best_fitness()
+		self.mean_of_distance_history[self.eval_count] =\
+			self.calc_mean_of_distance(parents)
 
 	def until(self, goal, max_eval_count):
 		while self.eval_count < max_eval_count:
