@@ -25,6 +25,7 @@ problems = [
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
 	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	{"name" : "rastrigin_small",   "func" : rastrigin,   "npop" : 6 * n, "nchi" : 6 * n},
 ]
 
 datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
@@ -35,7 +36,7 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 2000
+	max_eval_count = 3000
 	loop_count = 1
 
 	print(name, loop_count, flush = True)
@@ -66,10 +67,10 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "一部優秀_b=0.0(x＜1200)"
+		method_name = "親候補限_b=0.0(x＜1200)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
+		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
 		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
@@ -91,11 +92,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "親候補限_b=0.0(x＜1200)"
+		method_name = "親候補限_b=0.0(x＜2400)"
 		bgg = BGG(n, npop, n + 1, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
+		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
