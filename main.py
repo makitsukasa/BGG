@@ -1,8 +1,8 @@
 import datetime
 import numpy as np
 import warnings
-from jgg import JGG
 from bgg import BGG
+from NeighborFirst import NeighborFirst
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
@@ -13,6 +13,7 @@ from problem.frontier.rastrigin   import rastrigin
 warnings.simplefilter("error", RuntimeWarning)
 
 SAVE_HISTORY_CSV = False
+SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = True
 
 n = 20
@@ -35,175 +36,81 @@ for problem in problems:
 	nchi = problem["nchi"]
 	best_fitnesses = {}
 	max_eval_count = 20 * n
-	loop_count = 300
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		jgg = JGG(n, npop, n + 1, nchi, func)
-		result = jgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(jgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [jgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/jgg_{0}.csv".format(name)
-			with open(filename, "w") as f:
-				for c, v in jgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜300))"
 		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
+		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(300, 0.0)
+		bgg.barometer = lambda: 1
 		result = bgg.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(bgg.get_best_fitness())
 		else:
 			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/序盤_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜300))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(300, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜600))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(600, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		method_name = "親の50％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(50)
+		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
+			best_fitnesses[method_name].append(nf.get_best_fitness())
 		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/序盤_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜600))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(600, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		method_name = "評価値と近傍具合の積"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(50)
+		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
+			best_fitnesses[method_name].append(nf.get_best_fitness())
 		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/序盤_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in nf.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜1200))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜1200))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_一部優秀_b=0.0(x＜2400))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "BGG(子数可変_親候補限_b=0.0(x＜2400))"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(bgg.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [bgg.get_best_fitness()]
-
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in nf.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
@@ -216,7 +123,7 @@ for problem in problems:
 		)
 
 		if SAVE_COUNTS_CSV:
-			filename = "benchmark/{0}_{1}.csv".format(name, method_name)
+			filename = "benchmark/序盤_{0}_{1}.csv".format(name, method_name)
 			with open(filename, "w") as f:
 				for c in best_fitness:
 					f.write("{}\n".format(c))
