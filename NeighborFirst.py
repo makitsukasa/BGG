@@ -86,8 +86,14 @@ class NeighborFirst:
 		ret.extend(not_neighbor[:nbest])
 		return ret
 
-	def select_for_reproduction_sloped(self, neighborWeight):
-		pass
+	def select_for_reproduction_product(self):
+		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		best = self.population[0]
+		for i in self.population:
+			neighboringness = NeighborFirst.calc_distance(best, i)
+			i.product = i.fitness * neighboringness
+		self.population.sort(key = lambda s: s.product)
+		return self.population[:npar]
 
 if __name__ == '__main__':
 	n = 20
