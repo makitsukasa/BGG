@@ -17,14 +17,18 @@ class NeighborFirst:
 		self.history = {0 : self.get_best_fitness()}
 		self.mean_of_distance_history = {}
 
+	@staticmethod
+	def calc_distance(one, another):
+		ones_array = np.array(one.gene)
+		anothers_array = np.array(another.gene)
+		return np.linalg.norm(ones_array - anothers_array)
+
 	def calc_mean_of_distance(self, parents):
 		sum_ = 0
 		l = len(parents)
 		for i in range(l):
 			for j in range(i + 1, l):
-				i_th_array = np.array(parents[i].gene)
-				j_th_array = np.array(parents[j].gene)
-				sum_ += np.linalg.norm(i_th_array - j_th_array)
+				sum_ += NeighborFirst.calc_distance(parents[i], parents[j])
 		return sum_ / (l * (l - 1) / 2)
 
 	def crossover(self, parents):
@@ -69,7 +73,18 @@ class NeighborFirst:
 		return self.population[0].fitness
 
 	def select_for_reproduction_partitioned(self, neighborRatio):
-		pass
+		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		best = self.population[0]
+		for i in self.population:
+			i.neighboringness = NeighborFirst.calc_distance(best, i)
+		nneighbor = self.npar * neighborRatio
+		nbest = self.npar - nneighbor
+		self.population.sort(key = lambda s: s.neighboringness)
+		ret = self.population[:nneighbor]
+		not_neighbor = self.population[nneighbor:]
+		not_neighbor.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		ret.extend(not_neighbor[:nbest])
+		return ret
 
 	def select_for_reproduction_sloped(self, neighborWeight):
 		pass
