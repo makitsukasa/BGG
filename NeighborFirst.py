@@ -77,7 +77,7 @@ class NeighborFirst:
 		best = self.population[0]
 		for i in self.population:
 			i.neighboringness = NeighborFirst.calc_distance(best, i)
-		nneighbor = self.npar * neighborRatio
+		nneighbor = math.floor(self.npar * neighborRatio)
 		nbest = self.npar - nneighbor
 		self.population.sort(key = lambda s: s.neighboringness)
 		ret = self.population[:nneighbor]

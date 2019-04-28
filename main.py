@@ -72,7 +72,7 @@ for problem in problems:
 		method_name = "親の50％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(50)
+			lambda : nf.select_for_reproduction_partitioned(0.5)
 		result = nf.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
