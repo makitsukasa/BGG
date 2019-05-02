@@ -1,3 +1,4 @@
+import math
 import datetime
 import plot
 import numpy as np
@@ -72,28 +73,41 @@ class NeighborFirst:
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
 
-	def select_for_reproduction_partitioned(self, neighborRatio):
+	def select_for_reproduction_jgg(self):
+		np.random.shuffle(self.population)
+		ret = self.population[:self.npar]
+		self.population = self.population[self.npar:]
+		return ret
+
+	def select_for_reproduction_partitioned(self, neighborRatio, deadline):
+		if self.eval_count > deadline:
+			return self.select_for_reproduction_jgg()
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		best = self.population[0]
 		for i in self.population:
 			i.neighboringness = NeighborFirst.calc_distance(best, i)
-		nneighbor = self.npar * neighborRatio
+		nneighbor = math.floor(self.npar * neighborRatio)
 		nbest = self.npar - nneighbor
 		self.population.sort(key = lambda s: s.neighboringness)
 		ret = self.population[:nneighbor]
-		not_neighbor = self.population[nneighbor:]
-		not_neighbor.sort(key = lambda s: s.fitness if s.fitness else np.inf)
-		ret.extend(not_neighbor[:nbest])
+		self.population = self.population[nneighbor:]
+		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		ret.extend(self.population[:nbest])
+		self.population = self.population[nbest:]
 		return ret
 
-	def select_for_reproduction_product(self):
+	def select_for_reproduction_product(self, deadline):
+		if self.eval_count > deadline:
+			return self.select_for_reproduction_jgg()
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		best = self.population[0]
 		for i in self.population:
 			neighboringness = NeighborFirst.calc_distance(best, i)
 			i.product = i.fitness * neighboringness
 		self.population.sort(key = lambda s: s.product)
-		return self.population[:npar]
+		ret = self.population[:self.npar]
+		self.population = self.population[:self.npar]
+		return ret
 
 if __name__ == '__main__':
 	n = 20

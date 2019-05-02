@@ -69,7 +69,8 @@ for problem in problems:
 		method_name = "親の50％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(50)
+			lambda : nf.select_for_reproduction_partitioned(0.5, 1200)
+		nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(nf.get_best_fitness())
@@ -90,10 +91,11 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "評価値と近傍具合の積"
+		method_name = "最良個体との距離と評価値の積"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(50)
+			lambda : nf.select_for_reproduction_product(1200)
+		nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(nf.get_best_fitness())
