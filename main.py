@@ -35,8 +35,8 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 3000
-	loop_count = 1
+	max_eval_count = 300000
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -72,7 +72,7 @@ for problem in problems:
 		method_name = "親の50％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(0.5)
+			lambda : nf.select_for_reproduction_partitioned(0.5, 1200)
 		nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if result:
@@ -100,7 +100,8 @@ for problem in problems:
 		method_name = "最良個体との距離と評価値の積"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(50)
+			lambda : nf.select_for_reproduction_product(1200)
+		nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:

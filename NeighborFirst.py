@@ -73,7 +73,15 @@ class NeighborFirst:
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
 
-	def select_for_reproduction_partitioned(self, neighborRatio):
+	def select_for_reproduction_jgg():
+		np.random.shuffle(self.population)
+		ret = self.population[:self.npar]
+		self.population = self.population[self.npar:]
+		return ret
+
+	def select_for_reproduction_partitioned(self, neighborRatio, deadline):
+		if self.eval_count > deadline:
+			select_for_reproduction_jgg()
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		best = self.population[0]
 		for i in self.population:
@@ -87,7 +95,9 @@ class NeighborFirst:
 		ret.extend(not_neighbor[:nbest])
 		return ret
 
-	def select_for_reproduction_product(self):
+	def select_for_reproduction_product(self, deadline):
+		if self.eval_count > deadline:
+			select_for_reproduction_jgg()
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		best = self.population[0]
 		for i in self.population:
