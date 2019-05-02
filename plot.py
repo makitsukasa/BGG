@@ -8,7 +8,7 @@ font = {"family": "Noto Sans MONO CJK JP"}
 mpl.rc('font', **font)
 plt.rcParams["mathtext.default"] = "regular"
 
-def plot(filenames, log_scaled = False):
+def plot(filenames, ylabel, log_scaled = False):
 	if isinstance(filenames, str):
 		filenames = [filenames]
 
@@ -26,7 +26,7 @@ def plot(filenames, log_scaled = False):
 		plt.yscale("log")
 	plt.legend()
 	plt.xlabel("評価回数")
-	plt.ylabel("評価値")
+	plt.ylabel(ylabel)
 	plt.show()
 
 if __name__ == '__main__':
@@ -34,8 +34,9 @@ if __name__ == '__main__':
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-f", "--files", nargs = "*")
 		parser.add_argument("-l", "--log_scaled", action = "store_true")
+		parser.add_argument("--ylabel", default="評価値")
 		args = parser.parse_args()
-		plot(args.files, args.log_scaled)
+		plot(args.files, args.ylabel, args.log_scaled)
 	else:
 		plot([
 			"benchmark\\JGG.csv",

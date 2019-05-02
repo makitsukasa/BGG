@@ -12,9 +12,9 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_HISTORY_CSV = False
-SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_HISTORY_CSV = True
+SAVE_DISTANCE_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
@@ -35,8 +35,8 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 20 * n
-	loop_count = 100
+	max_eval_count = 100 * n
+	loop_count = 1
 
 	print(name, loop_count, flush = True)
 
@@ -70,7 +70,7 @@ for problem in problems:
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
 			lambda : nf.select_for_reproduction_partitioned(0.5, 1200)
-		nf.calc_mean_of_distance = lambda hoge: 0
+		# nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(nf.get_best_fitness())
@@ -95,7 +95,7 @@ for problem in problems:
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
 			lambda : nf.select_for_reproduction_product(1200)
-		nf.calc_mean_of_distance = lambda hoge: 0
+		# nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(nf.get_best_fitness())
