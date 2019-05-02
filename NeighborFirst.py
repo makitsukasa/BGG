@@ -90,9 +90,10 @@ class NeighborFirst:
 		nbest = self.npar - nneighbor
 		self.population.sort(key = lambda s: s.neighboringness)
 		ret = self.population[:nneighbor]
-		not_neighbor = self.population[nneighbor:]
-		not_neighbor.sort(key = lambda s: s.fitness if s.fitness else np.inf)
-		ret.extend(not_neighbor[:nbest])
+		self.population = self.population[nneighbor:]
+		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		ret.extend(self.population[:nbest])
+		self.population = self.population[nbest:]
 		return ret
 
 	def select_for_reproduction_product(self, deadline):
@@ -104,7 +105,9 @@ class NeighborFirst:
 			neighboringness = NeighborFirst.calc_distance(best, i)
 			i.product = i.fitness * neighboringness
 		self.population.sort(key = lambda s: s.product)
-		return self.population[:npar]
+		ret = self.population[:npar]
+		self.population = self.population[:npar]
+		return ret
 
 if __name__ == '__main__':
 	n = 20
