@@ -16,7 +16,7 @@ def ttest(filenames, log_scaled = False):
 			y = []
 			reader = csv.reader(f, quoting = csv.QUOTE_NONNUMERIC)
 			datas[filename] = [x for x in reader]
-		print(filename.split("\\")[-1].replace(".csv", ""), np.mean(datas[filename]))
+		print(filename.split("\\")[-1].replace(".csv", ","), np.mean(datas[filename]))
 	print()
 
 	for filename in filenames:
