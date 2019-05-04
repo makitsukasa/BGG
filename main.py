@@ -69,6 +69,34 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "親の25％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(0.25, 1200)
+		nf.calc_mean_of_distance = lambda hoge: 0
+		result = nf.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(nf.eval_count)
+			else:
+				eval_counts[method_name] = [nf.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
 		method_name = "親の50％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
@@ -97,10 +125,38 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "最良個体との距離と評価値の積"
+		method_name = "親の75％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_product(1200)
+			lambda : nf.select_for_reproduction_partitioned(0.75, 1200)
+		nf.calc_mean_of_distance = lambda hoge: 0
+		result = nf.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(nf.eval_count)
+			else:
+				eval_counts[method_name] = [nf.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "親の100％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(1.0, 1200)
 		nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if result:
