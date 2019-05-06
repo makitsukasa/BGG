@@ -12,9 +12,9 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_HISTORY_CSV = False
-SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_HISTORY_CSV = True
+SAVE_DISTANCE_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
