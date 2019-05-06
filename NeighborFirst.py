@@ -91,7 +91,7 @@ class NeighborFirst:
 		self.population.sort(key = lambda s: s.neighboringness)
 		ret = self.population[:nneighbor]
 		self.population = self.population[nneighbor:]
-		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
+		np.random.shuffle(self.population)
 		ret.extend(self.population[:nbest])
 		self.population = self.population[nbest:]
 		return ret

@@ -35,8 +35,8 @@ for problem in problems:
 	npop = problem["npop"]
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	max_eval_count = 100 * n
-	loop_count = 1
+	max_eval_count = 60 * n
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -66,16 +66,91 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "親の25％は最良個体の近傍"
+		method_name = "親の10％は最良個体の近傍"
 		nf = NeighborFirst(n, npop, n + 1, nchi, func)
 		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(0.25, 1200)
+			lambda : nf.select_for_reproduction_partitioned(0.1, 1200)
 		# nf.calc_mean_of_distance = lambda hoge: 0
 		result = nf.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(nf.eval_count)
+			best_fitnesses[method_name].append(nf.get_best_fitness())
 		else:
-			best_fitnesses[method_name] = [nf.eval_count]
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/序盤_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "親の20％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(0.2, 1200)
+		# nf.calc_mean_of_distance = lambda hoge: 0
+		result = nf.until(1e-7, max_eval_count)
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(nf.get_best_fitness())
+		else:
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/序盤_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "親の30％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(0.3, 1200)
+		# nf.calc_mean_of_distance = lambda hoge: 0
+		result = nf.until(1e-7, max_eval_count)
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(nf.get_best_fitness())
+		else:
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/序盤_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in nf.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "親の40％は最良個体の近傍"
+		nf = NeighborFirst(n, npop, n + 1, nchi, func)
+		nf.select_for_reproduction =\
+			lambda : nf.select_for_reproduction_partitioned(0.4, 1200)
+		# nf.calc_mean_of_distance = lambda hoge: 0
+		result = nf.until(1e-7, max_eval_count)
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(nf.get_best_fitness())
+		else:
+			best_fitnesses[method_name] = [nf.get_best_fitness()]
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/序盤_{0}_{1}.csv"\
 				.format(method_name, name)
@@ -101,56 +176,6 @@ for problem in problems:
 			best_fitnesses[method_name].append(nf.get_best_fitness())
 		else:
 			best_fitnesses[method_name] = [nf.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/序盤_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in nf.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in nf.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "親の75％は最良個体の近傍"
-		nf = NeighborFirst(n, npop, n + 1, nchi, func)
-		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(0.75, 1200)
-		# nf.calc_mean_of_distance = lambda hoge: 0
-		result = nf.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(nf.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [nf.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/序盤_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in nf.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in nf.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "親の100％は最良個体の近傍"
-		nf = NeighborFirst(n, npop, n + 1, nchi, func)
-		nf.select_for_reproduction =\
-			lambda : nf.select_for_reproduction_partitioned(1.0, 1200)
-		# nf.calc_mean_of_distance = lambda hoge: 0
-		result = nf.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(nf.eval_count)
-		else:
-			best_fitnesses[method_name] = [nf.eval_count]
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/序盤_{0}_{1}.csv"\
 				.format(method_name, name)
