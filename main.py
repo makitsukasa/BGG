@@ -1,8 +1,8 @@
 import datetime
 import numpy as np
 import warnings
-from jgg import JGG
 from bgg import BGG
+from RestrictedPopulation import RestrictedPopulation
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
@@ -12,7 +12,7 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_HISTORY_CSV = False
+SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = True
 SAVE_COUNTS_CSV = False
 
@@ -33,16 +33,17 @@ for problem in problems:
 	func = problem["func"]
 	name = problem["name"]
 	npop = problem["npop"]
+	npar = n + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 300000
-	loop_count = 300
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		bgg = BGG(n, npop, n + 1, nchi, func)
+		bgg = BGG(n, npop, npar, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = lambda: 1
@@ -69,39 +70,61 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "親候補限_b=0.0(x＜1200)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
+		method_name = "序盤は集団の数が1／2(x＜1200)"
+		ep = RestrictedPopulation(n, npop // 2, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
+				eval_counts[method_name].append(ep.eval_count)
 			else:
-				eval_counts[method_name] = [bgg.eval_count]
+				eval_counts[method_name] = [ep.eval_count]
 		else:
 			print(method_name, "failed")
 		if SAVE_HISTORY_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
+				for c, v in ep.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 		if SAVE_DISTANCE_CSV:
 			filename = "benchmark/{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
-				for c, v in bgg.mean_of_distance_history.items():
+				for c, v in ep.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "親候補限_b=0.0(x＜2400)"
-		bgg = BGG(n, npop, n + 1, nchi, func)
+		method_name = "序盤は集団の数が1／10(x＜1200)"
+		ep = RestrictedPopulation(n, npop // 10, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(ep.eval_count)
+			else:
+				eval_counts[method_name] = [ep.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "親候補限_b=0.0(x＜1200)"
+		bgg = BGG(n, npop, npar, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_barotmetic
 		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(2400, 0.0)
+		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
 		result = bgg.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
