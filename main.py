@@ -56,14 +56,14 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/評価値_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.mean_of_distance_history.items():
@@ -81,14 +81,14 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/評価値_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in ep.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in ep.mean_of_distance_history.items():
@@ -106,14 +106,14 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/評価値_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in ep.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in ep.mean_of_distance_history.items():
@@ -134,14 +134,14 @@ for problem in problems:
 		else:
 			print(method_name, "failed")
 		if SAVE_HISTORY_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/評価値_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/{0}_{1}.csv"\
+			filename = "benchmark/距離_{0}_{1}.csv"\
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in bgg.mean_of_distance_history.items():
@@ -157,7 +157,7 @@ for problem in problems:
 		)
 
 		if SAVE_COUNTS_CSV:
-			filename = "benchmark/{0}_{1}.csv".format(name, method_name)
+			filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
 			with open(filename, "w") as f:
 				for c in best_fitness:
 					f.write("{}\n".format(c))
