@@ -12,9 +12,9 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-SAVE_HISTORY_CSV = True
-SAVE_DISTANCE_CSV = True
-SAVE_COUNTS_CSV = False
+SAVE_HISTORY_CSV = False
+SAVE_DISTANCE_CSV = False
+SAVE_COUNTS_CSV = True
 
 n = 20
 
@@ -71,7 +71,7 @@ for problem in problems:
 				f.close()
 
 		method_name = "序盤は集団の数が1／2(x＜1200)"
-		ep = RestrictedPopulation(n, npop // 2, 1200, npop, npar, nchi, func)
+		ep = RestrictedPopulation(n, npop // 2, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
@@ -96,7 +96,7 @@ for problem in problems:
 				f.close()
 
 		method_name = "序盤は集団の数が1／10(x＜1200)"
-		ep = RestrictedPopulation(n, npop // 10, 1200, npop, npar, nchi, func)
+		ep = RestrictedPopulation(n, npop // 10, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
