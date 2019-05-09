@@ -4,15 +4,27 @@ import numpy as np
 from individual import Individual
 
 class RestrictedPopulation:
-	def __init__(self, n, npop_restricted, deadline, npop_full, npar, nchi, problem):
+	def __init__(
+			self,
+			n,
+			npop_restricted,
+			npar_restricted,
+			nchi_restricted,
+			deadline,
+			npop,
+			npar,
+			nchi,
+			problem):
 		self.n = n
-		self.npar = npar
-		self.npop_restricted = npop_restricted
-		self.npop_full = npop_full
-		self.nchi = nchi
-		self.eval_count = 0
-		self.problem = problem
+		self.npop = npop_restricted
+		self.npar = npar_restricted
+		self.nchi = nchi_restricted
 		self.deadline = deadline
+		self.npop_full = npop
+		self.npar_full = npar
+		self.nchi_full = nchi
+		self.problem = problem
+		self.eval_count = 0
 		self.expanded = False
 		self.population = [Individual(self.n) for i in range(npop_restricted)]
 		for i in self.population:
@@ -67,8 +79,12 @@ class RestrictedPopulation:
 			self.calc_mean_of_distance(parents)
 		if not self.expanded and self.eval_count > self.deadline:
 			self.expanded = True
+			npop_restricted = self.npop
+			self.npop = self.npop_full
+			self.npar = self.npar_full
+			self.nchi = self.nchi_full
 			self.population.extend(
-				[Individual(self.n) for _ in range(self.npop_full - self.npop_restricted)])
+				[Individual(self.n) for _ in range(self.npop - npop_restricted)])
 
 	def until(self, goal, max_eval_count):
 		while self.eval_count < max_eval_count:
