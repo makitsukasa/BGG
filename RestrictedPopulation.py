@@ -16,7 +16,7 @@ class RestrictedPopulation:
 			nchi,
 			problem):
 		self.n = n
-		self.npop = npop_restricted
+		self.npop = max(npop_restricted, npar_restricted)
 		self.npar = npar_restricted
 		self.nchi = nchi_restricted
 		self.deadline = deadline
@@ -26,7 +26,7 @@ class RestrictedPopulation:
 		self.problem = problem
 		self.eval_count = 0
 		self.expanded = False
-		self.population = [Individual(self.n) for i in range(npop_restricted)]
+		self.population = [Individual(self.n) for i in range(self.npop)]
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
 		self.history = {0 : self.get_best_fitness()}
