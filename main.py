@@ -95,6 +95,81 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
+		method_name = "序盤は集団の数が1／3(x＜1200)"
+		ep = RestrictedPopulation(n, npop // 3, npar, 2 * n, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(ep.eval_count)
+			else:
+				eval_counts[method_name] = [ep.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/評価値_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "序盤は集団の数が1／5(x＜1200)"
+		ep = RestrictedPopulation(n, npop // 5, npar, 2 * n, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(ep.eval_count)
+			else:
+				eval_counts[method_name] = [ep.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/評価値_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "序盤は集団の数が1／7(x＜1200)"
+		ep = RestrictedPopulation(n, npop // 7, npar, 2 * n, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(ep.eval_count)
+			else:
+				eval_counts[method_name] = [ep.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/評価値_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
 		method_name = "序盤は集団の数が1／10(x＜1200)"
 		ep = RestrictedPopulation(n, npop // 10, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
