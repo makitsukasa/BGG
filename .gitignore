@@ -4,3 +4,7 @@
 !/benchmark/d&d_plot.bat
 !/benchmark/d&d_plot_log_scaled.bat
 !/benchmark/d&d_ttest.bat
+/benchmark2/*
+!/benchmark2/d&d_plot.bat
+!/benchmark2/d&d_plot_log_scaled.bat
+!/benchmark2/d&d_ttest.bat
