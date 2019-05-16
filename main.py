@@ -95,8 +95,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団の数が3n(x＜1200)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団の数がn+1(x＜1200)"
+		ep = RestrictedPopulation(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
