@@ -3,6 +3,7 @@ import numpy as np
 import warnings
 from bgg import BGG
 from RestrictedPopulation import RestrictedPopulation
+from RestrictedElites import RestrictedElites
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
@@ -89,8 +90,30 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団の数がn+1(x＜1200)"
+		method_name = "序盤は集団がランダムなn+1(x＜1200)"
 		ep = RestrictedPopulation(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if method_name in best_fitnesses:
+			best_fitnesses[method_name].append(ep.get_best_fitness())
+		else:
+			best_fitnesses[method_name] = [ep.get_best_fitness()]
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark2/評価値_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark2/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "序盤は集団が優れたn+1(x＜1200)"
+		ep = RestrictedElites(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
