@@ -1,5 +1,6 @@
 import sys
 import csv
+import numpy as np
 from scipy import stats
 
 def ttest(filenames, log_scaled = False):
@@ -15,6 +16,8 @@ def ttest(filenames, log_scaled = False):
 			y = []
 			reader = csv.reader(f, quoting = csv.QUOTE_NONNUMERIC)
 			datas[filename] = [x for x in reader]
+		print(filename.split("\\")[-1].replace(".csv", ","), np.mean(datas[filename]))
+	print()
 
 	for filename in filenames:
 		print(",", filename.split("\\")[-1].replace(".csv", ""), end = "")
