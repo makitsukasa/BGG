@@ -25,7 +25,7 @@ problems = [
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
-	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
 datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
@@ -71,7 +71,7 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団の数が1／2(x＜1200)"
+		method_name = "序盤は集団がランダムな1／2(x＜1200)"
 		ep = RestrictedPopulation(n, npop // 2, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if result:
@@ -98,6 +98,31 @@ for problem in problems:
 
 		method_name = "序盤は集団がランダムなn+1(x＜1200)"
 		ep = RestrictedPopulation(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
+		result = ep.until(1e-7, max_eval_count)
+		if result:
+			if method_name in eval_counts:
+				eval_counts[method_name].append(ep.eval_count)
+			else:
+				eval_counts[method_name] = [ep.eval_count]
+		else:
+			print(method_name, "failed")
+		if SAVE_HISTORY_CSV:
+			filename = "benchmark/評価値_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+		if SAVE_DISTANCE_CSV:
+			filename = "benchmark/距離_{0}_{1}.csv"\
+				.format(method_name, name)
+			with open(filename, "w") as f:
+				for c, v in ep.mean_of_distance_history.items():
+					f.write("{0},{1}\n".format(c, v))
+				f.close()
+
+		method_name = "序盤は集団が優れた1／2(x＜1200)"
+		ep = RestrictedElites(n, npop // 2, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
