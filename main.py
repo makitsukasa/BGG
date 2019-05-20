@@ -68,8 +68,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1／2(x＜1200)"
-		ep = RestrictedPopulation(n, npop // 2, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな3n(x＜1200)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
@@ -90,8 +90,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1／2.2(x＜1200)"
-		ep = RestrictedPopulation(n, int(npop // 2.2), npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな2n(x＜1200)"
+		ep = RestrictedPopulation(n, 2 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
@@ -112,8 +112,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1／2.4(x＜1200)"
-		ep = RestrictedPopulation(n, int(npop // 2.4), npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな1n+1(x＜1200)"
+		ep = RestrictedPopulation(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
@@ -134,8 +134,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1／2.6(x＜1200)"
-		ep = RestrictedPopulation(n, int(npop // 2.6), npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団が優れた3n(x＜1200)"
+		ep = RestrictedElites(n, 3 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
@@ -156,8 +156,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1／2.8(x＜1200)"
-		ep = RestrictedPopulation(n, int(npop // 2.8), npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団が優れた2n(x＜1200)"
+		ep = RestrictedElites(n, 2 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
@@ -178,96 +178,8 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団が優れた1／2(x＜1200)"
-		ep = RestrictedElites(n, npop // 2, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(ep.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [ep.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark2/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark2/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた1／2.2(x＜1200)"
-		ep = RestrictedElites(n, int(npop // 2.2), npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(ep.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [ep.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark2/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark2/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた1／2.4(x＜1200)"
-		ep = RestrictedElites(n, int(npop // 2.4), npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(ep.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [ep.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark2/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark2/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた1／2.6(x＜1200)"
-		ep = RestrictedElites(n, int(npop // 2.6), npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if method_name in best_fitnesses:
-			best_fitnesses[method_name].append(ep.get_best_fitness())
-		else:
-			best_fitnesses[method_name] = [ep.get_best_fitness()]
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark2/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark2/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた1／2.8(x＜1200)"
-		ep = RestrictedElites(n, int(npop // 2.8), npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団が優れた1n+1(x＜1200)"
+		ep = RestrictedElites(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
 		result = ep.until(1e-7, max_eval_count)
 		if method_name in best_fitnesses:
 			best_fitnesses[method_name].append(ep.get_best_fitness())
