@@ -71,8 +71,10 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな1n+1(x＜1200)"
-		ep = RestrictedPopulation(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな3n(1200まで)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_over_deadline
+		ep.deadline = 1200
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
@@ -96,8 +98,10 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな2n(x＜1200)"
-		ep = RestrictedPopulation(n, 2 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな5n(1200まで)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_over_deadline
+		ep.deadline = 1200
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
@@ -121,8 +125,10 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな3n(x＜1200)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな3n(停滞まで)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
@@ -146,8 +152,10 @@ for problem in problems:
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
-		method_name = "序盤は集団がランダムな4n(x＜1200)"
-		ep = RestrictedPopulation(n, 4 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな5n(停滞まで)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
 		result = ep.until(1e-7, max_eval_count)
 		if result:
 			if method_name in eval_counts:
@@ -168,184 +176,6 @@ for problem in problems:
 				.format(method_name, name)
 			with open(filename, "w") as f:
 				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団がランダムな5n(x＜1200)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた1n+1(x＜1200)"
-		ep = RestrictedElites(n, n + 1, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた2n(x＜1200)"
-		ep = RestrictedElites(n, 2 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた3n(x＜1200)"
-		ep = RestrictedElites(n, 3 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた4n(x＜1200)"
-		ep = RestrictedElites(n, 4 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "序盤は集団が優れた5n(x＜1200)"
-		ep = RestrictedElites(n, 5 * n, npar, 2 * n, 1200, npop, npar, nchi, func)
-		result = ep.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(ep.eval_count)
-			else:
-				eval_counts[method_name] = [ep.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in ep.mean_of_distance_history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-
-		method_name = "親候補限_b=0.0(x＜1200)"
-		bgg = BGG(n, npop, npar, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_barotmetic
-		bgg.select_for_reproduction = bgg.select_for_reproduction_restricted
-		bgg.barometer = bgg.barometer_locally_constant(1200, 0.0)
-		result = bgg.until(1e-7, max_eval_count)
-		if result:
-			if method_name in eval_counts:
-				eval_counts[method_name].append(bgg.eval_count)
-			else:
-				eval_counts[method_name] = [bgg.eval_count]
-		else:
-			print(method_name, "failed")
-		if SAVE_HISTORY_CSV:
-			filename = "benchmark/評価値_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.history.items():
-					f.write("{0},{1}\n".format(c, v))
-				f.close()
-		if SAVE_DISTANCE_CSV:
-			filename = "benchmark/距離_{0}_{1}.csv"\
-				.format(method_name, name)
-			with open(filename, "w") as f:
-				for c, v in bgg.mean_of_distance_history.items():
 					f.write("{0},{1}\n".format(c, v))
 				f.close()
 
