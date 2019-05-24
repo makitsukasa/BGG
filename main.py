@@ -13,26 +13,26 @@ from problem.frontier.rastrigin   import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
-def save(system, problem_name, method_name):
+def save(system, result, method_name, problem_name):
 	if result:
 		if method_name in eval_counts:
-			eval_counts[method_name].append(bgg.eval_count)
+			eval_counts[method_name].append(system.eval_count)
 		else:
-			eval_counts[method_name] = [bgg.eval_count]
+			eval_counts[method_name] = [system.eval_count]
 	else:
 		print(method_name, "failed")
 	if SAVE_HISTORY_CSV:
 		filename = "benchmark/評価値_{0}_{1}.csv"\
 			.format(method_name, problem_name)
 		with open(filename, "w") as f:
-			for c, v in bgg.history.items():
+			for c, v in system.history.items():
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 	if SAVE_DISTANCE_CSV:
 		filename = "benchmark/距離_{0}_{1}.csv"\
 			.format(method_name, problem_name)
 		with open(filename, "w") as f:
-			for c, v in bgg.mean_of_distance_history.items():
+			for c, v in system.mean_of_distance_history.items():
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
@@ -72,77 +72,77 @@ for problem in problems:
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = lambda: 1
 		result = bgg.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
+		save(bgg, result, method_name, name)
 
 		method_name = "序盤は集団がランダムな3n(1200まで)"
 		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_over_deadline
 		ep.deadline = 1200
 		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな3n(t=1e-1)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-1
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな3n(t=1e-2)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-2
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな3n(t=1e-3)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-3
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな3n(t=1e-4)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
 
 		method_name = "序盤は集団がランダムな5n(1200まで)"
 		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_over_deadline
 		ep.deadline = 1200
 		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
+		save(ep, result, method_name, name)
 
-		method_name = "序盤は集団がランダムな3n(停滞,1e-1)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		method_name = "序盤は集団がランダムな5n(t=1e-1)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
+		ep.t = 1e-1
 		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
+		save(ep, result, method_name, name)
 
-		method_name = "序盤は集団がランダムな5n(停滞,1e-1)"
+		method_name = "序盤は集団がランダムな5n(t=1e-2)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-2
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな5n(t=1e-3)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-3
+		result = ep.until(1e-7, max_eval_count)
+		save(ep, result, method_name, name)
+
+		method_name = "序盤は集団がランダムな5n(t=1e-4)"
 		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-4
 		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな3n(停滞,1e-2)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな5n(停滞,1e-2)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな3n(停滞,1e-3)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな5n(停滞,1e-3)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな3n(停滞,1e-4)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
-
-		method_name = "序盤は集団がランダムな5n(停滞,1e-4)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(bgg, name, method_name)
+		save(ep, result, method_name, name)
 
 	for method_name, best_fitness in eval_counts.items():
 		print(
