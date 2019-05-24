@@ -61,7 +61,7 @@ for problem in problems:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 300000
-	loop_count = 1
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -88,14 +88,56 @@ for problem in problems:
 		result = ep.until(1e-7, max_eval_count)
 		save(bgg, name, method_name)
 
-		method_name = "序盤は集団がランダムな3n(停滞まで)"
+		method_name = "序盤は集団がランダムな3n(停滞,1e-1)"
 		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-4
 		result = ep.until(1e-7, max_eval_count)
 		save(bgg, name, method_name)
 
-		method_name = "序盤は集団がランダムな5n(停滞まで)"
+		method_name = "序盤は集団がランダムな5n(停滞,1e-1)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな3n(停滞,1e-2)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな5n(停滞,1e-2)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな3n(停滞,1e-3)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな5n(停滞,1e-3)"
+		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな3n(停滞,1e-4)"
+		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep.should_expand = ep.is_stucked
+		ep.t = 1e-4
+		result = ep.until(1e-7, max_eval_count)
+		save(bgg, name, method_name)
+
+		method_name = "序盤は集団がランダムな5n(停滞,1e-4)"
 		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-4
