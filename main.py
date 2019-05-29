@@ -33,19 +33,19 @@ def save(system, method_name, problem_name):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = False
-SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_HISTORY_CSV = True
+SAVE_DISTANCE_CSV = True
+SAVE_COUNTS_CSV = False
 
 n = 20
 
 problems = [
 	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
-	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
 ]
 
 datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
@@ -57,9 +57,9 @@ for problem in problems:
 	npar = n + 1
 	nchi = problem["nchi"]
 	best_fitnesses = {}
-	# max_eval_count = 5000
-	max_eval_count = 1200
-	loop_count = 100
+	max_eval_count = 4000
+	# max_eval_count = 1000
+	loop_count = 1
 
 	print(name, loop_count, flush = True)
 
@@ -72,20 +72,6 @@ for problem in problems:
 		result = bgg.until(1e-7, max_eval_count)
 		save(bgg, method_name, name)
 
-		method_name = "序盤は集団がランダムな3n(1200まで)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_over_deadline
-		ep.deadline = 1200
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな3n(t=1e-1)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-1
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
 		method_name = "序盤は集団がランダムな3n(t=1e-2)"
 		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
@@ -93,52 +79,10 @@ for problem in problems:
 		result = ep.until(1e-7, max_eval_count)
 		save(ep, method_name, name)
 
-		method_name = "序盤は集団がランダムな3n(t=1e-3)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-3
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな3n(t=1e-4)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな5n(1200まで)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_over_deadline
-		ep.deadline = 1200
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな5n(t=1e-1)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-1
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
 		method_name = "序盤は集団がランダムな5n(t=1e-2)"
 		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-2
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな5n(t=1e-3)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-3
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, method_name, name)
-
-		method_name = "序盤は集団がランダムな5n(t=1e-4)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-4
 		result = ep.until(1e-7, max_eval_count)
 		save(ep, method_name, name)
 
