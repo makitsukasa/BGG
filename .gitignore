@@ -1,4 +1,7 @@
 **/__pycache__/*
+.vscode/*
+tasks.json
+*.code-workspace
 **/hoge*
 /benchmark/*
 !/benchmark/d&d_plot.bat
