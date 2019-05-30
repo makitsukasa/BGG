@@ -37,7 +37,7 @@ def save(system, result, method_name, problem_name, index):
 			f.close()
 
 SAVE_HISTORY_CSV = True
-SAVE_DISTANCE_CSV = True
+SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = False
 
 n = 20
@@ -61,7 +61,7 @@ for problem in problems:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 4000
-	loop_count = 10
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 

@@ -1,6 +1,7 @@
 import sys
 import argparse
 import csv
+import glob
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from scipy import stats
@@ -71,16 +72,13 @@ def plot(filenames, ylabel, log_scaled = False):
 	plt.show()
 
 if __name__ == '__main__':
-	if len(sys.argv) > 1:
-		parser = argparse.ArgumentParser()
-		parser.add_argument("-f", "--files", nargs = "*")
-		parser.add_argument("-l", "--log_scaled", action = "store_true")
-		parser.add_argument("--ylabel", default = "評価値")
-		args = parser.parse_args()
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-f", "--files", nargs = "*")
+	parser.add_argument("-l", "--log_scaled", action = "store_true")
+	parser.add_argument("--ylabel", default = "評価値")
+	args = parser.parse_args()
+	if args.files:
 		plot(args.files, args.ylabel, args.log_scaled)
 	else:
-		plot([
-			"benchmark\\JGG.csv",
-			"benchmark\\BGG(子個体数固定，親加重和順).csv",
-			"benchmark\\BGG(子個体数可変，親加重和順).csv",
-		])
+		files = glob.glob('benchmark/*.csv')
+		plot(files, args.ylabel, args.log_scaled)
