@@ -3,33 +3,37 @@ import plot
 import numpy as np
 from individual import Individual
 
-class RestrictedPopulation:
+class RestrictedElites:
 	def __init__(
 			self,
 			n,
 			npop_restricted,
 			npar_restricted,
 			nchi_restricted,
+			deadline,
 			npop,
 			npar,
 			nchi,
 			problem):
 		self.n = n
-		self.npop = max(npop_restricted, npar_restricted)
+		self.npop = npop_restricted
 		self.npar = npar_restricted
 		self.nchi = nchi_restricted
+		self.deadline = deadline
 		self.npop_full = npop
 		self.npar_full = npar
 		self.nchi_full = nchi
 		self.problem = problem
 		self.eval_count = 0
 		self.expanded = False
-		self.population = [Individual(self.n) for i in range(self.npop)]
-		for i in self.population:
+		population = [Individual(n) for i in range(npop)]
+		for i in population:
 			i.fitness = self.problem(i.gene)
+		population.sort(key = lambda x: x.fitness)
+		self.population_nonelites = population[npop_restricted:]
+		self.population = population[:npop_restricted]
 		self.history = {0 : self.get_best_fitness()}
 		self.mean_of_distance_history = {}
-		self.avg_history = {0: np.average([i.fitness for i in self.population])}
 
 	def calc_mean_of_distance(self, parents):
 		sum_ = 0
@@ -74,20 +78,15 @@ class RestrictedPopulation:
 		elites = self.select_for_survival(parents, children)
 		self.population.extend(elites)
 		self.history[self.eval_count] = self.get_best_fitness()
-		self.avg_history[self.eval_count] =\
-			np.average([i.fitness for i in self.population])
 		self.mean_of_distance_history[self.eval_count] =\
 			self.calc_mean_of_distance(parents)
-		if not self.expanded and self.should_expand():
+		if not self.expanded and self.eval_count > self.deadline:
 			self.expanded = True
 			npop_restricted = self.npop
 			self.npop = self.npop_full
 			self.npar = self.npar_full
 			self.nchi = self.nchi_full
-			self.population.extend(
-				[Individual(self.n) for _ in range(self.npop - npop_restricted)])
-			for i in self.population:
-				i.fitness = self.problem(i.gene)
+			self.population.extend(self.population_nonelites)
 
 	def until(self, goal, max_eval_count):
 		while self.eval_count < max_eval_count:
@@ -99,24 +98,3 @@ class RestrictedPopulation:
 	def get_best_fitness(self):
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
-
-	def is_stucked(self):
-		if len(self.avg_history) < 3:
-			return False
-
-		keys = [*self.avg_history.keys()]
-		keys.sort()
-
-		init_fitness = self.avg_history[0]
-		most_recent_fitness = self.avg_history[keys[-1]]
-		second_recent_fitness = self.avg_history[keys[-2]]
-
-		diff_init_rec = init_fitness - most_recent_fitness
-		diff_rec_rec = second_recent_fitness - most_recent_fitness
-		if diff_init_rec != 0 and abs(diff_rec_rec / diff_init_rec) >= self.t:
-			return False
-
-		return True
-
-	def is_over_deadline(self):
-		return self.eval_count > self.deadline
