@@ -80,5 +80,5 @@ if __name__ == '__main__':
 	if args.files:
 		plot(args.files, args.ylabel, args.log_scaled)
 	else:
-		files = glob.glob('benchmark/*.csv')
+		files = glob.glob('*.csv')
 		plot(files, args.ylabel, args.log_scaled)

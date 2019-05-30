@@ -40,24 +40,22 @@ SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = False
 
-n = 20
+N = 20
 
-problems = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * n, "nchi" : 6 * n},
-	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * n, "nchi" : 6 * n},
-	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * n, "nchi" : 6 * n},
-	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * n, "nchi" : 6 * n},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * n, "nchi" : 8 * n},
-	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * n, "nchi" : 8 * n},
+PROBLEMS = [
+	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 ]
 
-datestr = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.datetime.now())
-
-for problem in problems:
+for problem in PROBLEMS:
 	func = problem["func"]
 	name = problem["name"]
 	npop = problem["npop"]
-	npar = n + 1
+	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 4000
@@ -67,7 +65,7 @@ for problem in problems:
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		bgg = BGG(n, npop, npar, nchi, func)
+		bgg = BGG(N, npop, npar, nchi, func)
 		bgg.get_nchi = bgg.get_nchi_fixed
 		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
 		bgg.barometer = lambda: 1
@@ -75,14 +73,14 @@ for problem in problems:
 		save(bgg, result, method_name, name, i)
 
 		method_name = "序盤は集団がランダムな3n(t=1e-2)"
-		ep = RestrictedPopulation(n, 3 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep = RestrictedPopulation(N, 3 * N, npar, 2 * N, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-2
 		result = ep.until(1e-7, max_eval_count)
 		save(ep, result, method_name, name, i)
 
 		method_name = "序盤は集団がランダムな5n(t=1e-2)"
-		ep = RestrictedPopulation(n, 5 * n, npar, 2 * n, npop, npar, nchi, func)
+		ep = RestrictedPopulation(N, 5 * N, npar, 2 * N, npop, npar, nchi, func)
 		ep.should_expand = ep.is_stucked
 		ep.t = 1e-2
 		result = ep.until(1e-7, max_eval_count)
