@@ -1,2 +1,1 @@
-cd ..
-python plot.py -l -f %*
+python ..\plot.py -lf %*
