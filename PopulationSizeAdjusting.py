@@ -6,24 +6,17 @@ class PopulationSizeAdjusting:
 	def __init__(
 			self,
 			n,
-			npop_restricted,
-			npar_restricted,
-			nchi_restricted,
-			npop,
-			npar,
-			nchi,
+			settings,
 			problem):
 		self.n = n
-		self.npop = max(npop_restricted, npar_restricted)
-		self.npar = npar_restricted
-		self.nchi = nchi_restricted
-		self.npop_full = npop
-		self.npar_full = npar
-		self.nchi_full = nchi
+		npop_first, npar_first, nchi_first, self.adjust_trigger = settings[0]
+		self.npop = max(npop_first, npar_first)
+		self.npar = npar_first
+		self.nchi = nchi_first
+		self.settings = settings
 		self.problem = problem
 		self.eval_count = 0
-		self.expandCount = 0
-		self.should_expand = [lambda : False]
+		self.adjust_count = 0
 		self.population = [Individual(self.n) for i in range(self.npop)]
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
@@ -78,16 +71,18 @@ class PopulationSizeAdjusting:
 			np.average([i.fitness for i in self.population])
 		self.mean_of_distance_history[self.eval_count] =\
 			self.calc_mean_of_distance(parents)
-		if self.should_expand[self.expandCount]():
-			self.expandCount += 1
-			npop_restricted = self.npop
-			self.npop = self.npop_full
-			self.npar = self.npar_full
-			self.nchi = self.nchi_full
-			self.population.extend(
-				[Individual(self.n) for _ in range(self.npop - npop_restricted)])
-			for i in self.population:
-				i.fitness = self.problem(i.gene)
+		if eval(self.adjust_trigger):
+			self.adjust_count += 1
+			npop_old = self.npop
+			self.npop, self.npar, self.nchi, self.adjust_trigger = self.settings[self.adjust_count]
+			if npop_old > self.npop:
+				np.random.shuffle(self.population)
+				self.population = self.population[:self.npop]
+			else:
+				self.population.extend(
+					[Individual(self.n) for _ in range(self.npop - npop_old)])
+				for i in self.population:
+					i.fitness = self.problem(i.gene)
 
 	def until(self, goal, max_eval_count):
 		while self.eval_count < max_eval_count:
@@ -100,7 +95,7 @@ class PopulationSizeAdjusting:
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		return self.population[0].fitness
 
-	def is_stucked(self):
+	def is_stucked(self, t):
 		if len(self.avg_history) < 3:
 			return False
 
@@ -113,10 +108,10 @@ class PopulationSizeAdjusting:
 
 		diff_init_rec = init_fitness - most_recent_fitness
 		diff_rec_rec = second_recent_fitness - most_recent_fitness
-		if diff_init_rec != 0 and abs(diff_rec_rec / diff_init_rec) >= self.t:
+		if diff_init_rec != 0 and abs(diff_rec_rec / diff_init_rec) >= t:
 			return False
 
 		return True
 
-	def is_over_deadline(self):
-		return self.eval_count > self.deadline
+	def is_over_deadline(self, deadline):
+		return self.eval_count > deadline

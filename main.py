@@ -33,9 +33,9 @@ def save(system, result, method_name, problem_name, index):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = True
+SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = False
+SAVE_COUNTS_CSV = True
 
 N = 20
 
@@ -55,29 +55,63 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 3000
+	max_eval_count = 40000
 	loop_count = 10
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		psa = PopulationSizeAdjusting(N, npop, npar, nchi, npop, npar, nchi, func)
-		psa.should_expand = [lambda : False]
+		psa = PopulationSizeAdjusting(
+			N,
+			[[npop, npar, nchi, "False"]],
+			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "序盤は集団がランダムな3n(t=1e-2)"
-		psa = PopulationSizeAdjusting(N, 3 * N, npar, 2 * N, npop, npar, nchi, func)
-		psa.should_expand = [psa.is_stucked, lambda : False]
-		psa.t = 1e-2
+		method_name = "3n→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "序盤は集団がランダムな5n(t=1e-2)"
-		psa = PopulationSizeAdjusting(N, 5 * N, npar, 2 * N, npop, npar, nchi, func)
-		psa.should_expand = [psa.is_stucked, lambda : False]
-		psa.t = 1e-2
+		method_name = "3n→(t=1e-2)→full→(t=1e-6)→3n"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[3 * N, npar, 2 * N, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "5n→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "5n→(t=1e-2)→full→(t=1e-6)→5n"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[5 * N, npar, 2 * N, "False"],
+			],
+			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
