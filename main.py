@@ -33,18 +33,18 @@ def save(system, result, method_name, problem_name, index):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = False
+SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_COUNTS_CSV = False
 
 N = 20
 
 PROBLEMS = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
+	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 ]
 
@@ -55,13 +55,13 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 40000
+	max_eval_count = 200000
 	loop_count = 10
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
-		method_name = "JGG"
+		method_name = "full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[[npop, npar, nchi, "False"]],
@@ -69,51 +69,60 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "3n→(t=1e-2)→full"
+		method_name = "full→(t=1e-2)→5n"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
+				[npop, npar, nchi, "self.is_stucked(1e-2)"],
+				[5 * N, npar, nchi, "False"],
 			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "3n→(t=1e-2)→full→(t=1e-6)→3n"
+		method_name = "full→(t=1e-4)→5n"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[3 * N, npar, 2 * N, "False"],
+				[npop, npar, nchi, "self.is_stucked(1e-4)"],
+				[5 * N, npar, nchi, "False"],
 			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "5n→(t=1e-2)→full"
+		method_name = "full→(t=1e-6)→5n"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
+				[npop, npar, nchi, "self.is_stucked(1e-4)"],
+				[5 * N, npar, nchi, "False"],
 			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "5n→(t=1e-2)→full→(t=1e-6)→5n"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[5 * N, npar, 2 * N, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "3n→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
+		# method_name = "5n→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
 	for method_name, best_fitness in eval_counts.items():
 		print(
