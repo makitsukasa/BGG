@@ -1,9 +1,6 @@
-import datetime
-import numpy as np
 import warnings
-from bgg import BGG
-from RestrictedPopulation import RestrictedPopulation
-from RestrictedElites import RestrictedElites
+import numpy as np
+from PopulationSizeAdjusting import PopulationSizeAdjusting
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
@@ -58,33 +55,31 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 300000
-	loop_count = 100
+	max_eval_count = 3000
+	loop_count = 10
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
 		method_name = "JGG"
-		bgg = BGG(N, npop, npar, nchi, func)
-		bgg.get_nchi = bgg.get_nchi_fixed
-		bgg.select_for_reproduction = bgg.select_for_reproduction_partitioned
-		bgg.barometer = lambda: 1
-		result = bgg.until(1e-7, max_eval_count)
-		save(bgg, result, method_name, name, i)
+		psa = PopulationSizeAdjusting(N, npop, npar, nchi, npop, npar, nchi, func)
+		psa.should_expand = [lambda : False]
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
 		method_name = "序盤は集団がランダムな3n(t=1e-2)"
-		ep = RestrictedPopulation(N, 3 * N, npar, 2 * N, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-2
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, result, method_name, name, i)
+		psa = PopulationSizeAdjusting(N, 3 * N, npar, 2 * N, npop, npar, nchi, func)
+		psa.should_expand = [psa.is_stucked, lambda : False]
+		psa.t = 1e-2
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
 		method_name = "序盤は集団がランダムな5n(t=1e-2)"
-		ep = RestrictedPopulation(N, 5 * N, npar, 2 * N, npop, npar, nchi, func)
-		ep.should_expand = ep.is_stucked
-		ep.t = 1e-2
-		result = ep.until(1e-7, max_eval_count)
-		save(ep, result, method_name, name, i)
+		psa = PopulationSizeAdjusting(N, 5 * N, npar, 2 * N, npop, npar, nchi, func)
+		psa.should_expand = [psa.is_stucked, lambda : False]
+		psa.t = 1e-2
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
 	for method_name, best_fitness in eval_counts.items():
 		print(
