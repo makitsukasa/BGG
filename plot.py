@@ -30,36 +30,41 @@ def plot(filenames, ylabel, log_scaled = False):
 			if not method_name in datas:
 				datas[method_name] = {}
 			datas[method_name][index] = {}
-			datas[method_name][index]["x"] = list(map(lambda i: int(i), x))
-			datas[method_name][index]["y"] = y
+			datas[method_name][index]["eval_count"] = list(map(lambda i: int(i), x))
+			datas[method_name][index]["fitness"] = y
 
 	for method_name, data in datas.items():
-		data["raw_datas"] = {}
+		index = np.argmax([data[i]["eval_count"][-1] for i in range(len(data))])
+		data["eval_count"] = data[index]["eval_count"]
+		data["fitness"] = {}
 		for i, d in data.items():
-			if i == "raw_datas":
+			if i == "fitness" or i == "eval_count":
 				continue
-			for xindex in data[0]["x"]:
-				if not xindex in data["raw_datas"]:
-					data["raw_datas"][xindex] = []
-				if index in data["raw_datas"]:
-					yindex = d["x"].index(int(xindex))
-					data["raw_datas"][xindex].append(d["y"][yindex])
+			for x in data["eval_count"]:
+				if not x in data["fitness"]:
+					data["fitness"][x] = []
+				if x in d["fitness"]:
+					yindex = d["eval_count"].index(int(x))
+					data["fitness"][x].append(d["fitness"][yindex])
 				else:
 					# Linear interpolation
-					near_pin_index = np.abs(np.asarray(d["x"]) - xindex).argsort()[:2]
-					a = d["y"][near_pin_index[0]]
-					b = d["y"][near_pin_index[1]]
-					i_a = d["x"][near_pin_index[0]]
-					i_b = d["x"][near_pin_index[1]]
-					data["raw_datas"][xindex].append(
-						a + (b - a) / (i_b - i_a) * (xindex - i_a))
+					near_pin_index = np.abs(np.asarray(d["eval_count"]) - x).argsort()[:2]
+					a = d["fitness"][near_pin_index[0]]
+					b = d["fitness"][near_pin_index[1]]
+					i_a = d["eval_count"][near_pin_index[0]]
+					i_b = d["eval_count"][near_pin_index[1]]
+					predicted = a + (b - a) / (i_b - i_a) * (x - i_a)
+					if predicted < 1e-7:
+						data["fitness"][x].append(1e-7)
+					else:
+						data["fitness"][x].append(predicted)
 		data["means"] = []
 		data["sems"] = []
-		for xindex, d in data["raw_datas"].items():
-			data["means"].append(np.mean(d))
-			data["sems"].append(stats.sem(d))
+		for i, f in data["fitness"].items():
+			data["means"].append(np.mean(f))
+			data["sems"].append(stats.sem(f))
 		plt.errorbar(
-			data[0]["x"],
+			data["eval_count"],
 			data["means"],
 			yerr = data["sems"],
 			label = method_name)
