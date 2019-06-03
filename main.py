@@ -40,11 +40,11 @@ SAVE_COUNTS_CSV = False
 N = 20
 
 PROBLEMS = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
+	{"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 ]
 
@@ -69,34 +69,23 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
+		method_name = "full→(t=1e-6)→0.6full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[int(npop * 0.6), npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
 		method_name = "full→(t=1e-6)→0.7full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
 				[npop, npar, nchi, "self.is_stucked(1e-6)"],
 				[int(npop * 0.7), npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "full→(t=1e-6)→0.8full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.8), npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "full→(t=1e-6)→0.9full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.9), npar, nchi, "False"],
 			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
