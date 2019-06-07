@@ -6,18 +6,19 @@ class PopulationSizeAdjusting:
 	def __init__(
 			self,
 			n,
-			settings,
+			adjust_opt,
 			problem):
 		self.n = n
-		npop_first, npar_first, nchi_first, self.adjust_trigger = settings[0]
+		npop_first, npar_first, nchi_first, self.adjust_trigger = adjust_opt[0]
 		self.npop = max(npop_first, npar_first)
 		self.npar = npar_first
 		self.nchi = nchi_first
-		self.settings = settings
+		self.adjust_opt = adjust_opt
 		self.problem = problem
 		self.eval_count = 0
 		self.adjust_count = 0
 		self.population = [Individual(self.n) for i in range(self.npop)]
+		self.stashed_population = []
 		for i in self.population:
 			i.fitness = self.problem(i.gene)
 		self.history = {0 : self.get_best_fitness()}
@@ -25,6 +26,7 @@ class PopulationSizeAdjusting:
 		self.avg_history = {0: np.average([i.fitness for i in self.population])}
 
 	def calc_mean_of_distance(self, parents):
+		# return 0 ######################################################################
 		sum_ = 0
 		l = len(parents)
 		for i in range(l):
@@ -33,6 +35,30 @@ class PopulationSizeAdjusting:
 				j_th_array = np.array(parents[j].gene)
 				sum_ += np.linalg.norm(i_th_array - j_th_array)
 		return sum_ / (l * (l - 1) / 2)
+
+	def adjust_pop_size(self):
+		self.adjust_count += 1
+		npop_old = self.npop
+		self.npop, self.npar, self.nchi, self.adjust_trigger =\
+			self.adjust_opt[self.adjust_count]
+		if npop_old > self.npop:
+			np.random.shuffle(self.population)
+			self.stashed_population.extend(self.population[self.npop:])
+			self.population = self.population[:self.npop]
+		else:
+			required = self.npop - npop_old
+			stashed = len(self.stashed_population)
+			if stashed > required:
+				self.population.extend(
+					self.stashed_population[:required])
+				self.stashed_population = self.stashed_population[required:]
+			else:
+				self.population.extend(self.stashed_population[:])
+				self.stashed_population = []
+				self.population.extend(
+					[Individual(self.n) for _ in range(required - stashed)])
+				for i in self.population:
+					i.fitness = self.problem(i.gene)
 
 	def select_for_reproduction(self):
 		np.random.shuffle(self.population)
@@ -72,17 +98,7 @@ class PopulationSizeAdjusting:
 		self.mean_of_distance_history[self.eval_count] =\
 			self.calc_mean_of_distance(parents)
 		if eval(self.adjust_trigger):
-			self.adjust_count += 1
-			npop_old = self.npop
-			self.npop, self.npar, self.nchi, self.adjust_trigger = self.settings[self.adjust_count]
-			if npop_old > self.npop:
-				np.random.shuffle(self.population)
-				self.population = self.population[:self.npop]
-			else:
-				self.population.extend(
-					[Individual(self.n) for _ in range(self.npop - npop_old)])
-				for i in self.population:
-					i.fitness = self.problem(i.gene)
+			self.adjust_pop_size()
 
 	def until(self, goal, max_eval_count):
 		while self.eval_count < max_eval_count:
