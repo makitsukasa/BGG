@@ -54,10 +54,11 @@ def plot(filenames, ylabel, log_scaled = False):
 					i_a = d["eval_count"][near_pin_index[0]]
 					i_b = d["eval_count"][near_pin_index[1]]
 					predicted = a + (b - a) / (i_b - i_a) * (x - i_a)
-					if predicted < 1e-7:
-						data["fitness"][x].append(1e-7)
-					else:
+					if predicted > 1e-7:
 						data["fitness"][x].append(predicted)
+					else:
+						# data["fitness"][x].append(1e-7)
+						pass
 		data["means"] = []
 		data["sems"] = []
 		for i, f in data["fitness"].items():
