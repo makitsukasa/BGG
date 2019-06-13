@@ -33,9 +33,9 @@ def save(system, result, method_name, problem_name, index):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = True
+SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = False
+SAVE_COUNTS_CSV = True
 
 N = 20
 
@@ -56,7 +56,7 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 400000
-	loop_count = 10
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -75,6 +75,17 @@ for problem in PROBLEMS:
 			[
 				[npop, npar, nchi, "self.is_stucked(1e-6)"],
 				[int(npop * 0.7), npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "full→(t=1e-6)→0.8full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[int(npop * 0.8), npar, nchi, "False"],
 			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
