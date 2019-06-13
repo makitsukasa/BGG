@@ -40,8 +40,8 @@ SAVE_COUNTS_CSV = True
 N = 20
 
 PROBLEMS = [
-	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
+	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
@@ -55,8 +55,8 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 300000
-	loop_count = 10
+	max_eval_count = 400000
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -69,11 +69,22 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		# method_name = "0.7full→(t=1e-2)→full"
+		# method_name = "0.7full,chi→(t=1e-2)→full"
 		# psa = PopulationSizeAdjusting(
 		# 	N,
 		# 	[
 		# 		[int(npop * 0.7), npar, nchi, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
+		# method_name = "0.8full,chi→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
 		# 		[npop, npar, nchi, "False"],
 		# 	],
 		# 	func)
@@ -91,6 +102,17 @@ for problem in PROBLEMS:
 		# result = psa.until(1e-7, max_eval_count)
 		# save(psa, result, method_name, name, i)
 
+		# method_name = "5n→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[5 * N, npar, nchi, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
 		method_name = "0.7full,chi→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
 			N,
@@ -102,11 +124,33 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
+		method_name = "0.8full,chi→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[int(npop * 0.8), npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
 		method_name = "3n,chi→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
 				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "5n,chi→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
 				[npop, npar, nchi, "False"],
 			],
 			func)
