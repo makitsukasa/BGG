@@ -1,5 +1,4 @@
 import numpy as np
-import plot
 from individual import Individual
 
 class PopulationSizeAdjusting:
