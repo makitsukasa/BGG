@@ -56,7 +56,7 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 400000
+	max_eval_count = 4000000
 	loop_count = 1
 
 	print(name, loop_count, flush = True)
@@ -86,7 +86,7 @@ for problem in PROBLEMS:
 			N,
 			npop,
 			int(0.8 * npop),
-			npar,
+			nchi,
 			nchi,
 			40,
 			func)

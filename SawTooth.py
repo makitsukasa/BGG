@@ -60,9 +60,11 @@ class SawTooth:
 				[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
 		return children
 
-	def select_for_survival(self, _parents, children):
-		children.sort(key = lambda i: i.fitness)
-		return children[:self.npar]
+	def select_for_survival(self, parents, children):
+		family = children[:]
+		family.extend(parents)
+		family.sort(key = lambda i: i.fitness)
+		return family[:self.npar]
 
 	def evaluate(self, pop):
 		for individual in pop:
@@ -82,7 +84,7 @@ class SawTooth:
 		# self.mean_of_distance_history[self.eval_count] =\
 		# 	self.calc_mean_of_distance(parents)
 		self.adjust_pop_size()
-		# print(self.generation_count, len(self.population), self.get_best_fitness())
+		print(self.generation_count, len(self.population), self.get_best_fitness())
 		self.generation_count += 1
 
 	def until(self, goal, max_eval_count):
