@@ -1,6 +1,7 @@
 import warnings
 import numpy as np
 from PopulationSizeAdjusting import PopulationSizeAdjusting
+from SawTooth import SawTooth
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
 from problem.frontier.bohachevsky import bohachevsky
@@ -56,106 +57,41 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	max_eval_count = 400000
-	loop_count = 100
+	loop_count = 1
 
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
-		method_name = "full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[[npop, npar, nchi, "False"]],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[[npop, npar, nchi, "False"]],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
-		# method_name = "0.7full,chi→(t=1e-2)→full"
+		# method_name = "full→(t=1e-2)→0.7full"
 		# psa = PopulationSizeAdjusting(
 		# 	N,
 		# 	[
-		# 		[int(npop * 0.7), npar, nchi, "self.is_stucked(1e-2)"],
-		# 		[npop, npar, nchi, "False"],
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[int(npop * 0.7), npar, nchi, "False"],
 		# 	],
 		# 	func)
 		# result = psa.until(1e-7, max_eval_count)
 		# save(psa, result, method_name, name, i)
 
-		# method_name = "0.8full,chi→(t=1e-2)→full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
-		# 		[npop, npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		# method_name = "3n→(t=1e-2)→full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[3 * N, npar, nchi, "self.is_stucked(1e-2)"],
-		# 		[npop, npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		# method_name = "5n→(t=1e-2)→full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[5 * N, npar, nchi, "self.is_stucked(1e-2)"],
-		# 		[npop, npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		method_name = "0.7full,chi→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
+		method_name = "sawtooth"
+		st = SawTooth(
 			N,
-			[
-				[int(npop * 0.7), npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
+			npop,
+			int(0.8 * npop),
+			npar,
+			nchi,
+			40,
 			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "0.8full,chi→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[int(npop * 0.8), npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "3n,chi→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[3 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "5n,chi→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[5 * N, npar, 2 * N, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		result = st.until(1e-7, max_eval_count)
+		save(st, result, method_name, name, i)
 
 	for method_name, best_fitness in eval_counts.items():
 		print(
