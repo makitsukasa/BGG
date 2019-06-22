@@ -84,7 +84,7 @@ class SawTooth:
 		# self.mean_of_distance_history[self.eval_count] =\
 		# 	self.calc_mean_of_distance(parents)
 		self.adjust_pop_size()
-		print(self.generation_count, len(self.population), self.get_best_fitness())
+		# print(self.generation_count, self.eval_count, len(self.population), self.get_best_fitness())
 		self.generation_count += 1
 
 	def until(self, goal, max_eval_count):

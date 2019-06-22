@@ -56,8 +56,8 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = 4000000
-	loop_count = 1
+	max_eval_count = np.Infinity
+	loop_count = 100
 
 	print(name, loop_count, flush = True)
 
@@ -70,22 +70,34 @@ for problem in PROBLEMS:
 		# result = psa.until(1e-7, max_eval_count)
 		# save(psa, result, method_name, name, i)
 
-		# method_name = "full→(t=1e-2)→0.7full"
+		# method_name = "full→(t=1e-2)→0.8full"
 		# psa = PopulationSizeAdjusting(
 		# 	N,
 		# 	[
 		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
-		# 		[int(npop * 0.7), npar, nchi, "False"],
+		# 		[int(npop * 0.8), npar, nchi, "False"],
 		# 	],
 		# 	func)
 		# result = psa.until(1e-7, max_eval_count)
 		# save(psa, result, method_name, name, i)
 
-		method_name = "sawtooth"
+		method_name = "sawtooth_pop"
 		st = SawTooth(
 			N,
 			npop,
-			int(0.8 * npop),
+			int(npop * 0.8),
+			npop,
+			npop,
+			40,
+			func)
+		result = st.until(1e-7, max_eval_count)
+		save(st, result, method_name, name, i)
+
+		method_name = "sawtooth_chi"
+		st = SawTooth(
+			N,
+			npop,
+			int(npop * 0.8),
 			nchi,
 			nchi,
 			40,
