@@ -2,12 +2,16 @@ import warnings
 import numpy as np
 from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
-from problem.frontier.sphere      import sphere
-from problem.frontier.ktablet     import ktablet
-from problem.frontier.bohachevsky import bohachevsky
-from problem.frontier.ackley      import ackley
-from problem.frontier.schaffer    import schaffer
-from problem.frontier.rastrigin   import rastrigin
+# from problem.frontier.sphere      import sphere
+# from problem.frontier.ktablet     import ktablet
+# from problem.frontier.bohachevsky import bohachevsky
+# from problem.frontier.ackley      import ackley
+# from problem.frontier.schaffer    import schaffer
+# from problem.frontier.rastrigin   import rastrigin
+from problem.sawtooth.goldberg_richardson import goldberg_richardson
+from problem.sawtooth.rosenbrock          import rosenbrock
+from problem.sawtooth.ackley              import ackley
+from problem.sawtooth.rastrigin           import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
