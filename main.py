@@ -2,12 +2,6 @@ import warnings
 import numpy as np
 from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
-# from problem.frontier.sphere      import sphere
-# from problem.frontier.ktablet     import ktablet
-# from problem.frontier.bohachevsky import bohachevsky
-# from problem.frontier.ackley      import ackley
-# from problem.frontier.schaffer    import schaffer
-# from problem.frontier.rastrigin   import rastrigin
 from problem.sawtooth.goldberg_richardson import goldberg_richardson
 from problem.sawtooth.rosenbrock          import rosenbrock
 from problem.sawtooth.ackley              import ackley
@@ -42,15 +36,19 @@ SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = True
 
-N = 20
+N = 10
 
 PROBLEMS = [
-	{"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "gold_rich",     "func" : goldberg_richardson, "npop" : 10 * N, "nchi" : 8 * N},
+	{"name" : "rastrigin",     "func" : rastrigin,   "npop" : 8 * N, "nchi" : 8 * N},
+	# {"name" : "rosenbrock",    "func" : rosenbrock,  "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",        "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
 ]
 
 for problem in PROBLEMS:
@@ -66,13 +64,13 @@ for problem in PROBLEMS:
 	print(name, loop_count, flush = True)
 
 	for i in range(loop_count):
-		# method_name = "full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[[npop, npar, nchi, "False"]],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
+		method_name = "full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[[npop, npar, nchi, "False"]],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
 		# method_name = "full→(t=1e-2)→0.8full"
 		# psa = PopulationSizeAdjusting(
@@ -85,17 +83,17 @@ for problem in PROBLEMS:
 		# result = psa.until(1e-7, max_eval_count)
 		# save(psa, result, method_name, name, i)
 
-		method_name = "sawtooth"
-		st = SawTooth(
-			N,
-			npop,
-			int(npop * 0.8),
-			nchi,
-			nchi,
-			40,
-			func)
-		result = st.until(1e-7, max_eval_count)
-		save(st, result, method_name, name, i)
+		# method_name = "sawtooth"
+		# st = SawTooth(
+		# 	N,
+		# 	npop,
+		# 	int(npop * 0.8),
+		# 	nchi,
+		# 	nchi,
+		# 	40,
+		# 	func)
+		# result = st.until(1e-7, max_eval_count)
+		# save(st, result, method_name, name, i)
 
 	for method_name, best_fitness in eval_counts.items():
 		print(
