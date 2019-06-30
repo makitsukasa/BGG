@@ -116,6 +116,7 @@ class PopulationSizeAdjusting:
 	def get_best_fitness(self):
 		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
 		# print(self.population[0].gene)
+		# print(self.population[0].fitness)
 		return self.population[0].fitness
 
 	def is_stucked(self, t):

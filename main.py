@@ -50,8 +50,8 @@ PROBLEMS = [
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 
-	{"name" : "schwefel",  "func" : schwefel,   "npop" : 16 * N, "nchi" : 8 * N},
-	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 30 * N, "nchi" : 8 * N},
+	{"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
 ]
@@ -65,7 +65,7 @@ for problem in PROBLEMS:
 	eval_counts = {}
 	best_fitnesses = {}
 	max_eval_count = 500000
-	loop_count = 10
+	loop_count = 50
 
 	print(name, npop, npar, nchi, loop_count, flush = True)
 
@@ -78,28 +78,28 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		# method_name = "full→(t=1e-6)→0.8full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
-		# 		[int(npop * 0.8), npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
+		method_name = "full→(t=1e-6)→0.8full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[int(npop * 0.8), npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
-		# method_name = "sawtooth"
-		# st = SawTooth(
-		# 	N,
-		# 	npop,
-		# 	int(npop * 0.8),
-		# 	nchi,
-		# 	nchi,
-		# 	40,
-		# 	func)
-		# result = st.until(1e-7, max_eval_count)
-		# save(st, result, method_name, name, i)
+		method_name = "sawtooth"
+		st = SawTooth(
+			N,
+			npop,
+			int(npop * 0.8),
+			nchi,
+			nchi,
+			40,
+			func)
+		result = st.until(1e-7, max_eval_count)
+		save(st, result, method_name, name, i)
 
 	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
