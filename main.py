@@ -2,10 +2,10 @@ import warnings
 import numpy as np
 from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
-from problem.sawtooth.goldberg_richardson import goldberg_richardson
-from problem.sawtooth.rosenbrock          import rosenbrock
-from problem.sawtooth.ackley              import ackley
-from problem.sawtooth.rastrigin           import rastrigin
+from problem.sawtooth.griewangk  import griewangk
+from problem.sawtooth.rosenbrock import rosenbrock
+from problem.sawtooth.ackley     import ackley
+from problem.sawtooth.rastrigin  import rastrigin
 
 warnings.simplefilter("error", RuntimeWarning)
 
@@ -45,10 +45,10 @@ PROBLEMS = [
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
-	# {"name" : "gold_rich",     "func" : goldberg_richardson, "npop" : 10 * N, "nchi" : 8 * N},
-	# {"name" : "rastrigin",     "func" : rastrigin,   "npop" : 18 * N, "nchi" : 8 * N},
-	{"name" : "rosenbrock",    "func" : rosenbrock,  "npop" : 12 * N, "nchi" : 8 * N},
-	# {"name" : "ackley",        "func" : ackley,      "npop" : 8 * N, "nchi" : 6 * N},
+	{"name" : "griewangk",     "func" : griewangk, "npop" : 6 * N, "nchi" : 6 * N},
+	# {"name" : "rastrigin",     "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "rosenbrock",    "func" : rosenbrock,  "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",        "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
 ]
 
 for problem in PROBLEMS:
