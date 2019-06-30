@@ -50,7 +50,7 @@ PROBLEMS = [
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 
-	{"name" : "schwefel",  "func" : schefel,   "npop" : 10 * N, "nchi" : 8 * N},
+	{"name" : "schwefel",  "func" : schwefel,   "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
