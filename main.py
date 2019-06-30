@@ -36,7 +36,7 @@ SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = True
 
-N = 10
+N = 3
 
 PROBLEMS = [
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
@@ -46,9 +46,9 @@ PROBLEMS = [
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "gold_rich",     "func" : goldberg_richardson, "npop" : 10 * N, "nchi" : 8 * N},
-	{"name" : "rastrigin",     "func" : rastrigin,   "npop" : 8 * N, "nchi" : 8 * N},
-	# {"name" : "rosenbrock",    "func" : rosenbrock,  "npop" : 24 * N, "nchi" : 8 * N},
-	# {"name" : "ackley",        "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",     "func" : rastrigin,   "npop" : 18 * N, "nchi" : 8 * N},
+	{"name" : "rosenbrock",    "func" : rosenbrock,  "npop" : 12 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",        "func" : ackley,      "npop" : 8 * N, "nchi" : 6 * N},
 ]
 
 for problem in PROBLEMS:
@@ -58,10 +58,10 @@ for problem in PROBLEMS:
 	npar = N + 1
 	nchi = problem["nchi"]
 	eval_counts = {}
-	max_eval_count = np.Infinity
-	loop_count = 10
+	max_eval_count = 500000
+	loop_count = 300
 
-	print(name, loop_count, flush = True)
+	print(name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
 		method_name = "full"
