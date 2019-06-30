@@ -50,8 +50,8 @@ PROBLEMS = [
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
 
-	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 30 * N, "nchi" : 8 * N},
-	{"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 1 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
 ]
@@ -65,7 +65,7 @@ for problem in PROBLEMS:
 	eval_counts = {}
 	best_fitnesses = {}
 	max_eval_count = 500000
-	loop_count = 50
+	loop_count = 1
 
 	print(name, npop, npar, nchi, loop_count, flush = True)
 
