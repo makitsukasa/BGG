@@ -55,9 +55,17 @@ class SawTooth:
 		mean = np.mean(np.array([parent.gene for parent in parents]), axis = 0)
 		children = [Individual(self.n) for i in range(self.nchi)]
 		for child in children:
-			epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
-			child.gene = mean + np.sum(
-				[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
+			ng = True
+			while ng:
+				epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
+				child.gene = mean + np.sum(
+					[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
+				ng = False
+				for g in child.gene:
+					if g < 0.0 or g > 1.0:
+						ng = True
+						break
+			# print("gene", child.gene)
 		return children
 
 	def select_for_survival(self, parents, children):
