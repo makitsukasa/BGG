@@ -64,7 +64,7 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
-	max_eval_count = 20000
+	max_eval_count = 500000
 	loop_count = 10
 
 	print(name, npop, npar, nchi, loop_count, flush = True)
@@ -78,16 +78,16 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "full→(t=1e-6)→0.8full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.8), npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "full→(t=1e-6)→0.8full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[int(npop * 0.8), npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
 		# method_name = "sawtooth"
 		# st = SawTooth(
@@ -101,6 +101,7 @@ for problem in PROBLEMS:
 		# result = st.until(1e-7, max_eval_count)
 		# save(st, result, method_name, name, i)
 
+	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
 		print(
 			method_name,
@@ -109,17 +110,18 @@ for problem in PROBLEMS:
 			sep = ","
 		)
 
+	print()
+	print("best fitnesses")
 	for method_name, best_fitness in best_fitnesses.items():
 		print(
 			method_name,
 			np.average(best_fitness),
-			loop_count - len(best_fitness),
 			sep = ","
 		)
 
-		if SAVE_COUNTS_CSV:
-			filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
-			with open(filename, "w") as f:
-				for c in best_fitnesses:
-					f.write("{}\n".format(c))
-				f.close()
+	if SAVE_COUNTS_CSV:
+		filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
+		with open(filename, "w") as f:
+			for c in best_fitnesses:
+				f.write("{}\n".format(c))
+			f.close()
