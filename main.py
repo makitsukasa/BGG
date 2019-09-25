@@ -8,7 +8,7 @@ from problem.frontier.bohachevsky import bohachevsky
 # from problem.frontier.ackley      import ackley
 from problem.frontier.schaffer    import schaffer
 # from problem.frontier.rastrigin   import rastrigin
-# from problem.sawtooth.schwefel  import schwefel
+from problem.sawtooth.schwefel  import schwefel
 from problem.sawtooth.rastrigin import rastrigin
 from problem.sawtooth.ackley    import ackley
 from problem.sawtooth.griewangk import griewangk
@@ -98,27 +98,27 @@ for problem in PROBLEMS:
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
-		method_name = "full→(t=1e-6)→0.8full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.8), npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "full→(t=1e-6)→0.8full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[int(npop * 0.8), npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
-		method_name = "full→(t=1e-6)→3n"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[3 * N, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "full→(t=1e-6)→3n"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[3 * N, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
 		method_name = "0.8full→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
