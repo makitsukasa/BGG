@@ -27,6 +27,8 @@ def save(system, result, method_name, problem_name, index):
 			eval_counts[method_name] = [system.eval_count]
 	else:
 		print(method_name, "failed")
+	print(system.population[0].gene)
+
 	if SAVE_HISTORY_CSV:
 		filename = "benchmark/評価値_{0}_{1}_{2}.csv"\
 			.format(method_name, problem_name, index)
@@ -76,10 +78,10 @@ PROBLEMS = [
 	# {"name" : "ackley",      "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
-	# n = 10, max_eval = 20000
-	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 9 * N, "nchi" : 8 * N},
-	# {"name" : "ackley",    "func" : ackley,    "npop" : 7 * N, "nchi" : 8 * N},
-	# {"name" : "griewangk", "func" : griewangk, "npop" : 6 * N, "nchi" : 8 * N},
+	{"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
 ]
 
 for problem in PROBLEMS:
@@ -152,57 +154,17 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "3n→(t=1e-2)→full→(t=1e-6)→3n"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[3 * N, npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[3 * N, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "0.8full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[int(npop * 0.8), npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "3n"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[3 * N, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[[npop, npar, nchi, "False"]],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "sawtooth"
-		st = SawTooth(
-			N,
-			npop,
-			int(npop * 0.8),
-			nchi,
-			nchi,
-			40,
-			func)
-		result = st.until(1e-7, max_eval_count)
-		save(st, result, method_name, name, i)
+		# method_name = "sawtooth"
+		# st = SawTooth(
+		# 	N,
+		# 	npop,
+		# 	int(npop * 0.8),
+		# 	nchi,
+		# 	nchi,
+		# 	40,
+		# 	func)
+		# result = st.until(1e-7, max_eval_count)
+		# save(st, result, method_name, name, i)
 
 	print()
 	print(N, name, npop, npar, nchi, loop_count, flush = True)

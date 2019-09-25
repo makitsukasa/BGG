@@ -9,14 +9,14 @@ def schwefel(x):
 	# 	print(-shifted[i] * np.sin(np.sqrt(abs(shifted[i]))))
 	# 	ans += 418.982887272432744946 - shifted[i] * np.sin(np.sqrt(abs(shifted[i])))
 	# if ans < 0:
-	# 	print("----------------------------------------------------------------------------------------------")
+	# 	print("---------------------------------------------------------------------------------------")
 	# 	print(x)
 	# 	print(shifted)
 	# 	print(ans)
-	# 	print("----------------------------------------------------------------------------------------------")
+	# 	print("---------------------------------------------------------------------------------------")
 	# 	pass
 	# return ans
-	return np.sum(418.982887272432744946 - shifted * np.sin(np.sqrt(abs(shifted))))
+	return 418.982887272432744946 * len(x) - np.sum(shifted * np.sin(np.sqrt(np.abs(shifted))))
 
 # https://www.wolframalpha.com/input/?i=Minimize%5B%7B-x+Sin%5BSqrt%5BAbs%5Bx%5D%5D%5D,+Abs%5Bx%5D+%3C+500%7D,+%7Bx%7D%5D
 # NumberForm[Minimize[{(-x) Sin[Sqrt[Abs[x]]], Abs[x] < 500}, {x}], 52]
