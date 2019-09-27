@@ -6,9 +6,11 @@ class PopulationSizeAdjusting:
 			self,
 			n,
 			adjust_opt,
-			problem):
+			problem,
+			first_pop="ramdom"):
 		self.n = n
 		npop_first, npar_first, nchi_first, self.adjust_trigger = adjust_opt[0]
+		npop_max = max([opt[0] for opt in adjust_opt])
 		self.npop = max(npop_first, npar_first)
 		self.npar = npar_first
 		self.nchi = nchi_first
@@ -16,13 +18,19 @@ class PopulationSizeAdjusting:
 		self.problem = problem
 		self.eval_count = 0
 		self.adjust_count = 0
-		self.population = [Individual(self.n) for i in range(self.npop)]
-		self.stashed_population = []
-		for i in self.population:
+		self.reserved_population = [Individual(self.n) for i in range(npop_max)]
+		for i in self.reserved_population:
 			i.fitness = self.problem(i.gene)
+		if first_pop == "elite":
+			self.reserved_population.sort(key=lambda x: x.fitness)
+		self.population = self.reserved_population[:self.npop]
+		self.reserved_population = self.reserved_population[self.npop:]
+		np.random.shuffle(self.reserved_population)
+		np.random.shuffle(self.population)
 		self.history = {0 : self.get_best_fitness()}
 		self.mean_of_distance_history = {}
-		self.avg_history = {0: np.average([i.fitness for i in self.population])}
+		self.avg_history = {0: np.average([i.fitness for i in self.reserved_population])}
+		# print("pop:", len(self.population), ", reserved:", len(self.reserved_population))
 
 	def calc_mean_of_distance(self, parents):
 		# return 0 ######################################################################
@@ -42,22 +50,23 @@ class PopulationSizeAdjusting:
 			self.adjust_opt[self.adjust_count]
 		if npop_old > self.npop:
 			np.random.shuffle(self.population)
-			self.stashed_population.extend(self.population[self.npop:])
+			self.reserved_population.extend(self.population[self.npop:])
 			self.population = self.population[:self.npop]
 		else:
 			required = self.npop - npop_old
-			stashed = len(self.stashed_population)
+			stashed = len(self.reserved_population)
 			if stashed > required:
 				self.population.extend(
-					self.stashed_population[:required])
-				self.stashed_population = self.stashed_population[required:]
+					self.reserved_population[:required])
+				self.reserved_population = self.reserved_population[required:]
 			else:
-				self.population.extend(self.stashed_population[:])
-				self.stashed_population = []
+				self.population.extend(self.reserved_population[:])
+				self.reserved_population = []
 				self.population.extend(
 					[Individual(self.n) for _ in range(required - stashed)])
 				for i in self.population:
 					i.fitness = self.problem(i.gene)
+		# print("pop:", len(self.population), ", reserved:", len(self.reserved_population))
 
 	def select_for_reproduction(self):
 		np.random.shuffle(self.population)
@@ -74,7 +83,7 @@ class PopulationSizeAdjusting:
 			while ng:
 				epsilon = np.random.uniform(-np.sqrt(3 / mu), np.sqrt(3 / mu), mu)
 				child.gene = mean + np.sum(
-					[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis = 0)
+					[epsilon[i] * (parents[i].gene - mean) for i in range(mu)], axis=0)
 				ng = False
 				for g in child.gene:
 					if g < 0.0 or g > 1.0:
@@ -114,11 +123,17 @@ class PopulationSizeAdjusting:
 				return True
 		return False
 
-	def get_best_fitness(self):
-		self.population.sort(key = lambda s: s.fitness if s.fitness else np.inf)
-		# print(self.population[0].gene)
-		# print(self.population[0].fitness)
-		return self.population[0].fitness
+	def get_best_fitness(self, ignore_reserved=True):
+		if ignore_reserved:
+			self.population.sort(key=lambda s: s.fitness if s.fitness else np.inf)
+			# print(self.population[0].gene)
+			# print(self.population[0].fitness)
+			return self.population[0].fitness
+		else:
+			pop = self.population
+			pop.extend(self.reserved_population)
+			pop.sort(key=lambda s: s.fitness if s.fitness else np.inf)
+			return pop[0].fitness
 
 	def is_stucked(self, t):
 		if len(self.avg_history) < 3:

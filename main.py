@@ -2,6 +2,12 @@ import warnings
 import numpy as np
 from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
+from problem.frontier.sphere      import sphere
+from problem.frontier.ktablet     import ktablet
+from problem.frontier.bohachevsky import bohachevsky
+# from problem.frontier.ackley      import ackley
+from problem.frontier.schaffer    import schaffer
+# from problem.frontier.rastrigin   import rastrigin
 from problem.sawtooth.schwefel  import schwefel
 from problem.sawtooth.rastrigin import rastrigin
 from problem.sawtooth.ackley    import ackley
@@ -21,6 +27,8 @@ def save(system, result, method_name, problem_name, index):
 			eval_counts[method_name] = [system.eval_count]
 	else:
 		print(method_name, "failed")
+	print(system.population[0].gene)
+
 	if SAVE_HISTORY_CSV:
 		filename = "benchmark/評価値_{0}_{1}_{2}.csv"\
 			.format(method_name, problem_name, index)
@@ -40,17 +48,37 @@ SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
 SAVE_COUNTS_CSV = True
 
-N = 10
+N = 20
 
 PROBLEMS = [
-	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
-	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
-	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
-	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 24 * N, "nchi" : 8 * N},
+	# n = 10, goal = 1e-7
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  9 * N, "nchi" : 8 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 17 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  7 * N, "nchi" : 8 * N},
+	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  7 * N, "nchi" : 8 * N},
 
-	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 1 * N, "nchi" : 8 * N},
+	# n = 20, goal = 1e-7
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	{"name" : "ackley",      "func" : ackley,      "npop" : 6 * N, "nchi" : 8 * N},
+	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
+
+	# n = 50, goal = 1e-7
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  10 * N, "nchi" : 6 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
+
+	{"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
@@ -64,24 +92,61 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
-	max_eval_count = 500000
-	loop_count = 1
+	max_eval_count = 100000 * N
+	loop_count = 20
 
-	print(name, npop, npar, nchi, loop_count, flush = True)
+	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
-		method_name = "full"
+		# method_name = "full→(t=1e-6)→0.8full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[int(npop * 0.8), npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
+		# method_name = "full→(t=1e-6)→3n"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
+		# 		[3 * N, npar, nchi, "False"],
+		# 	],
+		# 	func)
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
+		method_name = "0.8full→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
 			N,
-			[[npop, npar, nchi, "False"]],
+			[
+				[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
 			func)
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "full→(t=1e-6)→0.8full"
+		method_name = "3n→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
+				[3 * N, npar, nchi, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func)
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "0.8full→(t=1e-2)→full→(t=1e-6)→0.8full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
 				[npop, npar, nchi, "self.is_stucked(1e-6)"],
 				[int(npop * 0.8), npar, nchi, "False"],
 			],
@@ -89,17 +154,20 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "sawtooth"
-		st = SawTooth(
-			N,
-			npop,
-			int(npop * 0.8),
-			nchi,
-			nchi,
-			40,
-			func)
-		result = st.until(1e-7, max_eval_count)
-		save(st, result, method_name, name, i)
+		# method_name = "sawtooth"
+		# st = SawTooth(
+		# 	N,
+		# 	npop,
+		# 	int(npop * 0.8),
+		# 	nchi,
+		# 	nchi,
+		# 	40,
+		# 	func)
+		# result = st.until(1e-7, max_eval_count)
+		# save(st, result, method_name, name, i)
+
+	print()
+	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
