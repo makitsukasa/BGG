@@ -29,7 +29,7 @@ class PopulationSizeAdjusting:
 		np.random.shuffle(self.population)
 		self.history = {0 : self.get_best_fitness()}
 		self.mean_of_distance_history = {}
-		self.avg_history = {0: np.average([i.fitness for i in self.reserved_population])}
+		self.avg_history = {0: np.average([i.fitness for i in self.population])}
 		# print("pop:", len(self.population), ", reserved:", len(self.reserved_population))
 
 	def calc_mean_of_distance(self, parents):

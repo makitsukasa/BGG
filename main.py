@@ -27,7 +27,7 @@ def save(system, result, method_name, problem_name, index):
 			eval_counts[method_name] = [system.eval_count]
 	else:
 		print(method_name, "failed")
-	print(system.population[0].gene)
+	# print(system.population[0].gene)
 
 	if SAVE_HISTORY_CSV:
 		filename = "benchmark/評価値_{0}_{1}_{2}.csv"\
@@ -61,13 +61,13 @@ PROBLEMS = [
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  7 * N, "nchi" : 8 * N},
 
 	# n = 20, goal = 1e-7
-	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
-	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  7 * N, "nchi" : 6 * N},
-	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
-	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	{"name" : "k-tablet",    "func" : ktablet,     "npop" :  7 * N, "nchi" : 6 * N},
+	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	{"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
 	{"name" : "ackley",      "func" : ackley,      "npop" : 6 * N, "nchi" : 8 * N},
-	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
+	{"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
 	# n = 50, goal = 1e-7
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
@@ -78,7 +78,7 @@ PROBLEMS = [
 	# {"name" : "ackley",      "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
-	{"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
+	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
@@ -93,64 +93,32 @@ for problem in PROBLEMS:
 	eval_counts = {}
 	best_fitnesses = {}
 	max_eval_count = 100000 * N
-	loop_count = 20
+	loop_count = 50
 
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
-		# method_name = "full→(t=1e-6)→0.8full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
-		# 		[int(npop * 0.8), npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		# method_name = "full→(t=1e-6)→3n"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[npop, npar, nchi, "self.is_stucked(1e-6)"],
-		# 		[3 * N, npar, nchi, "False"],
-		# 	],
-		# 	func)
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		method_name = "0.8full→(t=1e-2)→full"
+		method_name = "full→(t=1e-6)→0.8elite"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "3n→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[3 * N, npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func)
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
-
-		method_name = "0.8full→(t=1e-2)→full→(t=1e-6)→0.8full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[int(npop * 0.8), npar, nchi, "self.is_stucked(1e-2)"],
 				[npop, npar, nchi, "self.is_stucked(1e-6)"],
 				[int(npop * 0.8), npar, nchi, "False"],
 			],
-			func)
+			func,
+			"elite")
+		result = psa.until(1e-7, max_eval_count)
+
+		save(psa, result, method_name, name, i)
+		method_name = "full→(t=1e-6)→0.8rand"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[npop, npar, nchi, "self.is_stucked(1e-6)"],
+				[int(npop * 0.8), npar, nchi, "False"],
+			],
+			func,
+			"random")
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
