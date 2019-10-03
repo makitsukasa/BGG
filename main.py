@@ -61,24 +61,24 @@ PROBLEMS = [
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  7 * N, "nchi" : 8 * N},
 
 	# n = 20, goal = 1e-7
-	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
-	{"name" : "ackley",      "func" : ackley,      "npop" : 6 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  6 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
 	# n = 50, goal = 1e-7
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
-	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  10 * N, "nchi" : 6 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
-	{"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
+	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk", "func" : griewangk, "npop" : 11 * N, "nchi" : 8 * N},
