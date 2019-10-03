@@ -62,20 +62,20 @@ PROBLEMS = [
 
 	# n = 20, goal = 1e-7
 	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
-	{"name" : "k-tablet",    "func" : ktablet,     "npop" :  7 * N, "nchi" : 6 * N},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
-	{"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
-	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
-	{"name" : "ackley",      "func" : ackley,      "npop" : 6 * N, "nchi" : 8 * N},
-	{"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
+	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  9 * N, "nchi" : 6 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  6 * N, "nchi" : 8 * N},
+	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
 	# n = 50, goal = 1e-7
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  10 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
-	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
+	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
-	# {"name" : "ackley",      "func" : ackley,      "npop" : 24 * N, "nchi" : 8 * N},
+	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
 	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
@@ -92,12 +92,23 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
-	max_eval_count = 100000 * N
+	max_eval_count = 40000 * N
 	loop_count = 50
 
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
+		# method_name = "full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func,
+		# 	"random")
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
+
 		method_name = "full→(t=1e-6)→0.8elite"
 		psa = PopulationSizeAdjusting(
 			N,
@@ -107,18 +118,6 @@ for problem in PROBLEMS:
 			],
 			func,
 			"elite")
-		result = psa.until(1e-7, max_eval_count)
-
-		save(psa, result, method_name, name, i)
-		method_name = "full→(t=1e-6)→0.8rand"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.8), npar, nchi, "False"],
-			],
-			func,
-			"random")
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
