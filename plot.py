@@ -30,7 +30,7 @@ def plot(filenames, ylabel, log_scaled = False):
 			if not method_name in datas:
 				datas[method_name] = {}
 			datas[method_name][index] = {}
-			datas[method_name][index]["eval_count"] = list(map(int))
+			datas[method_name][index]["eval_count"] = list(map(int, x))
 			datas[method_name][index]["fitness"] = y
 
 	for method_name, data in datas.items():
