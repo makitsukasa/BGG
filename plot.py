@@ -59,6 +59,7 @@ def plot(filenames, ylabel, log_scaled = False):
 					else:
 						# data["fitness"][x].append(1e-7)
 						pass
+
 		data["means"] = []
 		data["sems"] = []
 		for i, f in data["fitness"].items():

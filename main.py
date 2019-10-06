@@ -44,9 +44,9 @@ def save(system, result, method_name, problem_name, index):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = False
+SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = True
+SAVE_COUNTS_CSV = False
 
 N = 20
 
@@ -93,7 +93,7 @@ for problem in PROBLEMS:
 	eval_counts = {}
 	best_fitnesses = {}
 	# max_eval_count = 40000 * N
-	max_eval_count = 2000
+	max_eval_count = 20000
 	loop_count = 50
 
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
