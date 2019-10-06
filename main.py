@@ -44,9 +44,10 @@ def save(system, result, method_name, problem_name, index):
 				f.write("{0},{1}\n".format(c, v))
 			f.close()
 
-SAVE_HISTORY_CSV = True
+SAVE_HISTORY_CSV = False
 SAVE_DISTANCE_CSV = False
-SAVE_COUNTS_CSV = False
+SAVE_EVAL_COUNTS_CSV = True
+SAVE_BEST_FITNESSES_CSV = False
 
 N = 20
 
@@ -92,8 +93,8 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
-	# max_eval_count = 40000 * N
-	max_eval_count = 20000
+	max_eval_count = 40000 * N
+	# max_eval_count = 20000
 	loop_count = 50
 
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
@@ -168,9 +169,18 @@ for problem in PROBLEMS:
 			sep = ","
 		)
 
-	if SAVE_COUNTS_CSV:
-		filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
-		with open(filename, "w") as f:
-			for c in best_fitnesses:
-				f.write("{}\n".format(c))
-			f.close()
+	if SAVE_EVAL_COUNTS_CSV:
+		for method_name, eval_count in eval_counts.items():
+			filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
+			with open(filename, "w") as f:
+				for x in eval_count:
+					f.write("{}\n".format(x))
+				f.close()
+
+	if SAVE_BEST_FITNESSES_CSV:
+		for method_name, best_fitness in best_fitnesses.items():
+			filename = "benchmark/検定_{0}_{1}.csv".format(name, method_name)
+			with open(filename, "w") as f:
+				for x in best_fitness:
+					f.write("{}\n".format(x))
+				f.close()

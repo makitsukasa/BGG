@@ -1,4 +1,5 @@
 import sys
+import glob
 import csv
 import numpy as np
 from scipy import stats
@@ -41,7 +42,6 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		ttest(sys.argv[1:])
 	else:
-		ttest([
-			"benchmark/JGG.csv",
-			"benchmark/親全部.csv",
-		])
+
+		files = glob.glob('*.csv')
+		ttest(files)
