@@ -30,7 +30,7 @@ def save(system, result, method_name, problem_name, index):
 	# print(system.population[0].gene)
 
 	if SAVE_HISTORY_CSV:
-		filename = "benchmark/評価値_{0}_{1}_{2}.csv"\
+		filename = "benchmark/{0}_{1}_{2}.csv"\
 			.format(method_name, problem_name, index)
 		with open(filename, "w") as f:
 			for c, v in system.history.items():
@@ -92,46 +92,60 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
-	max_eval_count = 40000 * N
+	# max_eval_count = 40000 * N
+	max_eval_count = 2000
 	loop_count = 50
 
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
 
 	for i in range(loop_count):
-		# method_name = "full"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[npop, npar, nchi, "False"],
-		# 	],
-		# 	func,
-		# 	"random")
-		# result = psa.until(1e-7, max_eval_count)
-		# save(psa, result, method_name, name, i)
-
-		method_name = "full→(t=1e-6)→0.8elite"
+		method_name = "full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[npop, npar, nchi, "self.is_stucked(1e-6)"],
-				[int(npop * 0.8), npar, nchi, "False"],
+				[npop, npar, nchi, "False"],
+			],
+			func,
+			"random")
+
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "Npop×0.3_elite→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[int(npop * 0.3), npar, nchi, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
 			],
 			func,
 			"elite")
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		# method_name = "sawtooth"
-		# st = SawTooth(
-		# 	N,
-		# 	npop,
-		# 	int(npop * 0.8),
-		# 	nchi,
-		# 	nchi,
-		# 	40,
-		# 	func)
-		# result = st.until(1e-7, max_eval_count)
-		# save(st, result, method_name, name, i)
+		method_name = "N×3_elite→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[N * 3, npar, nchi, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func,
+			"elite")
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
+
+		method_name = "N+1_elite→(t=1e-2)→full"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[N + 1, npar, nchi, "self.is_stucked(1e-2)"],
+				[npop, npar, nchi, "False"],
+			],
+			func,
+			"elite")
+		result = psa.until(1e-7, max_eval_count)
+		save(psa, result, method_name, name, i)
 
 	print()
 	print(N, name, npop, npar, nchi, loop_count, flush = True)

@@ -3,7 +3,7 @@
 tasks.json
 *.code-workspace
 **/hoge*
-/benchmark/*
+/benchmark*/*
 !/benchmark/d&d_plot.bat
 !/benchmark/d&d_plot_log_scaled.bat
 !/benchmark/d&d_ttest.bat
