@@ -62,11 +62,11 @@ PROBLEMS = [
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  7 * N, "nchi" : 8 * N},
 
 	# n = 20, goal = 1e-7
-	{"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
-	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
+	{"name" : "rastrigin",   "func" : rastrigin,   "npop" : 17 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  6 * N, "nchi" : 8 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 8 * N},
 
@@ -112,41 +112,41 @@ for problem in PROBLEMS:
 		result = psa.until(1e-7, max_eval_count)
 		save(psa, result, method_name, name, i)
 
-		method_name = "Npop×0.3_elite→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[int(npop * 0.3), npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func,
-			"elite")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "Npop×0.3_elite→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[int(npop * 0.3), npar, nchi, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func,
+		# 	"elite")
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
-		method_name = "N×3_elite→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[N * 3, npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func,
-			"elite")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "N×3_elite→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[N * 3, npar, nchi, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func,
+		# 	"elite")
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
-		method_name = "N+1_elite→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[N + 1, npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
-			],
-			func,
-			"elite")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		# method_name = "N+1_elite→(t=1e-2)→full"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[N + 1, npar, nchi, "self.is_stucked(1e-2)"],
+		# 		[npop, npar, nchi, "False"],
+		# 	],
+		# 	func,
+		# 	"elite")
+		# result = psa.until(1e-7, max_eval_count)
+		# save(psa, result, method_name, name, i)
 
 	print()
 	print(N, name, npop, npar, nchi, loop_count, flush = True)
