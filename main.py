@@ -68,9 +68,9 @@ SAVE_BEST_FITNESSES_CSV = False
 DIRECTORY_NAME = "benchmark3"
 
 N = 20
-# max_eval_count = 40000 * N
-max_eval_count = 30000
-loop_count = 50
+# MAX_EVAL_COUNT = 40000 * N
+MAX_EVAL_COUNT = 30000
+LOOP_COUNT = 50
 
 PROBLEMS = [
 	# n = 20, goal = 1e-7
@@ -106,9 +106,9 @@ for problem in PROBLEMS:
 	eval_counts = {}
 	best_fitnesses = {}
 
-	print(N, name, npop, npar, nchi, loop_count, flush = True)
+	print(N, name, npop, npar, nchi, LOOP_COUNT, flush = True)
 
-	for i in range(loop_count):
+	for i in range(LOOP_COUNT):
 		method_name = "full"
 		psa = PopulationSizeAdjusting(
 			N,
@@ -117,7 +117,7 @@ for problem in PROBLEMS:
 			],
 			func,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
 		save(psa, result, method_name, name, i)
 
 		method_name = "N+1"
@@ -128,7 +128,7 @@ for problem in PROBLEMS:
 			],
 			func,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
 		save(psa, result, method_name, name, i)
 
 		method_name = "N+1→(t=1e-2)→full"
@@ -140,7 +140,7 @@ for problem in PROBLEMS:
 			],
 			func,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
 		save(psa, result, method_name, name, i)
 
 		method_name = "N+1→(t=1e-3)→full"
@@ -152,18 +152,18 @@ for problem in PROBLEMS:
 			],
 			func,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
 		save(psa, result, method_name, name, i)
 
 	print()
-	print(N, name, npop, npar, nchi, loop_count, flush = True)
+	print(N, name, npop, npar, nchi, LOOP_COUNT, flush = True)
 
 	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
 		print(
 			method_name,
 			np.average(eval_count),
-			loop_count - len(eval_count),
+			LOOP_COUNT - len(eval_count),
 			sep = ","
 		)
 
