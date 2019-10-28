@@ -20,6 +20,12 @@ def save(system, result, method_name, problem_name, index):
 		best_fitnesses[method_name].append(system.get_best_fitness())
 	else:
 		best_fitnesses[method_name] = [system.get_best_fitness()]
+
+	if method_name in adjust_eval_counts:
+		adjust_eval_counts[method_name].append(system.adjust_eval_count[0])
+	else:
+		adjust_eval_counts[method_name] = [system.adjust_eval_count[0]]
+
 	if result:
 		if method_name in eval_counts:
 			eval_counts[method_name].append(system.eval_count)
@@ -27,6 +33,7 @@ def save(system, result, method_name, problem_name, index):
 			eval_counts[method_name] = [system.eval_count]
 	else:
 		print(method_name, "failed")
+
 	# print(system.population[0].gene)
 
 	if SAVE_HISTORY_CSV:
@@ -105,6 +112,7 @@ for problem in PROBLEMS:
 	nchi = problem["nchi"]
 	eval_counts = {}
 	best_fitnesses = {}
+	adjust_eval_counts = {}
 
 	print(N, name, npop, npar, nchi, LOOP_COUNT, flush = True)
 
@@ -157,7 +165,6 @@ for problem in PROBLEMS:
 
 	print()
 	print(N, name, npop, npar, nchi, LOOP_COUNT, flush = True)
-
 	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
 		print(
@@ -166,7 +173,6 @@ for problem in PROBLEMS:
 			LOOP_COUNT - len(eval_count),
 			sep = ","
 		)
-
 	print()
 	print("best fitnesses")
 	for method_name, best_fitness in best_fitnesses.items():
@@ -175,5 +181,14 @@ for problem in PROBLEMS:
 			np.average(best_fitness),
 			sep = ","
 		)
+	print()
+	print("switch")
+	for method_name, adjust_eval_count in adjust_eval_counts.items():
+		print(
+			method_name,
+			np.average(adjust_eval_count),
+			sep = ","
+		)
+	print()
 
 	save_once(name, eval_counts, best_fitnesses)
