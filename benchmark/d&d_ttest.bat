@@ -1,4 +1,2 @@
-@echo off
-cd ..
-python ttest.py %*
+python ..\ttest.py %*
 pause
