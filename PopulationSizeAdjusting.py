@@ -135,6 +135,11 @@ class PopulationSizeAdjusting:
 			pop.sort(key=lambda s: s.fitness if s.fitness else np.inf)
 			return pop[0].fitness
 
+	def get_adjust_eval_count(self):
+		if not self.adjust_eval_count:
+			return [None]
+		return self.adjust_eval_count
+
 	def is_stucked(self, t):
 		if len(self.avg_history) < 3:
 			return False
