@@ -20,12 +20,12 @@ SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = False
 SAVE_EVAL_COUNTS_CSV = False
 SAVE_BEST_FITNESSES_CSV = False
-DIRECTORY_NAME = "benchmark"
+BASE_DIRECTORY_NAME = "benchmark"
 
 N = 20
-# MAX_EVAL_COUNT = 40000 * N
-MAX_EVAL_COUNT = 2000
-LOOP_COUNT = 3
+MAX_EVAL_COUNT = 40000 * N
+# MAX_EVAL_COUNT = 2000
+LOOP_COUNT = 50
 
 PROBLEMS = [
 	# n = 20, goal = 1e-7
@@ -59,7 +59,7 @@ for problem in PROBLEMS:
 	NPAR = N + 1
 	NCHI = problem["nchi"]
 	TITLE = "_".join(map(str, [N, FUNCNAME, NPOP, NPAR, NCHI, LOOP_COUNT]))
-	DIRECTORY_NAME += "/" + TITLE
+	DIRECTORY_NAME = BASE_DIRECTORY_NAME + "/" + TITLE
 	mkdir(DIRECTORY_NAME)
 	eval_counts = {}
 	best_fitnesses = {}
@@ -84,18 +84,6 @@ for problem in PROBLEMS:
 			N,
 			[
 				[N + 1, NPAR, NCHI, "False"],
-			],
-			FUNC,
-			"random")
-		result = psa.until(1e-7, MAX_EVAL_COUNT)
-		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
-
-		method_name = "N+1→(t=1e-2)→full"
-		psa = PopulationSizeAdjusting(
-			N,
-			[
-				[N + 1, NPAR, NCHI, "self.is_stucked(1e-2)"],
-				[NPOP, NPAR, NCHI, "False"],
 			],
 			FUNC,
 			"random")
