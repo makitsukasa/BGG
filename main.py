@@ -1,5 +1,6 @@
 import warnings
 import numpy as np
+from filemanager import mkdir, save, save_once
 from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
 from problem.frontier.sphere      import sphere
@@ -15,62 +16,16 @@ from problem.sawtooth.griewangk import griewangk
 
 warnings.simplefilter("error", RuntimeWarning)
 
-def save(system, result, method_name, problem_name, index):
-	if method_name in best_fitnesses:
-		best_fitnesses[method_name].append(system.get_best_fitness())
-	else:
-		best_fitnesses[method_name] = [system.get_best_fitness()]
-	if result:
-		if method_name in eval_counts:
-			eval_counts[method_name].append(system.eval_count)
-		else:
-			eval_counts[method_name] = [system.eval_count]
-	else:
-		print(method_name, "failed")
-	# print(system.population[0].gene)
-
-	if SAVE_HISTORY_CSV:
-		filename = DIRECTORY_NAME + "/{0}_{1}_{2}.csv"\
-			.format(method_name, problem_name, index)
-		with open(filename, "w") as f:
-			for c, v in system.history.items():
-				f.write("{0},{1}\n".format(c, v))
-			f.close()
-	if SAVE_DISTANCE_CSV:
-		filename = DIRECTORY_NAME + "/距離_{0}_{1}_{2}.csv"\
-			.format(method_name, problem_name, index)
-		with open(filename, "w") as f:
-			for c, v in system.mean_of_distance_history.items():
-				f.write("{0},{1}\n".format(c, v))
-			f.close()
-
-def save_once(method_name, eval_counts, best_fitnesses):
-	if SAVE_EVAL_COUNTS_CSV:
-		for method_name, eval_count in eval_counts.items():
-			filename = DIRECTORY_NAME + "/検定_{0}_{1}.csv".format(name, method_name)
-			with open(filename, "w") as f:
-				for x in eval_count:
-					f.write("{}\n".format(x))
-				f.close()
-
-	if SAVE_BEST_FITNESSES_CSV:
-		for method_name, best_fitness in best_fitnesses.items():
-			filename = DIRECTORY_NAME + "/検定_{0}_{1}.csv".format(name, method_name)
-			with open(filename, "w") as f:
-				for x in best_fitness:
-					f.write("{}\n".format(x))
-				f.close()
-
 SAVE_HISTORY_CSV = True
 SAVE_DISTANCE_CSV = False
 SAVE_EVAL_COUNTS_CSV = False
 SAVE_BEST_FITNESSES_CSV = False
-DIRECTORY_NAME = "benchmark3"
+DIRECTORY_NAME = "benchmark"
 
 N = 20
-# max_eval_count = 40000 * N
-max_eval_count = 30000
-loop_count = 50
+# MAX_EVAL_COUNT = 40000 * N
+MAX_EVAL_COUNT = 2000
+LOOP_COUNT = 3
 
 PROBLEMS = [
 	# n = 20, goal = 1e-7
@@ -98,75 +53,77 @@ PROBLEMS = [
 ]
 
 for problem in PROBLEMS:
-	func = problem["func"]
-	name = problem["name"]
-	npop = problem["npop"]
-	npar = N + 1
-	nchi = problem["nchi"]
+	FUNC = problem["func"]
+	FUNCNAME = problem["name"]
+	NPOP = problem["npop"]
+	NPAR = N + 1
+	NCHI = problem["nchi"]
+	TITLE = "_".join(map(str, [N, FUNCNAME, NPOP, NPAR, NCHI, LOOP_COUNT]))
+	DIRECTORY_NAME += "/" + TITLE
+	mkdir(DIRECTORY_NAME)
 	eval_counts = {}
 	best_fitnesses = {}
+	adjust_eval_counts = {}
 
-	print(N, name, npop, npar, nchi, loop_count, flush = True)
+	print(TITLE, flush = True)
 
-	for i in range(loop_count):
+	for i in range(LOOP_COUNT):
 		method_name = "full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[npop, npar, nchi, "False"],
+				[NPOP, NPAR, NCHI, "False"],
 			],
-			func,
+			FUNC,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		method_name = "N+1"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[N + 1, npar, nchi, "False"],
+				[N + 1, NPAR, NCHI, "False"],
 			],
-			func,
+			FUNC,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		method_name = "N+1→(t=1e-2)→full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[N + 1, npar, nchi, "self.is_stucked(1e-2)"],
-				[npop, npar, nchi, "False"],
+				[N + 1, NPAR, NCHI, "self.is_stucked(1e-2)"],
+				[NPOP, NPAR, NCHI, "False"],
 			],
-			func,
+			FUNC,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		method_name = "N+1→(t=1e-3)→full"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[N + 1, npar, nchi, "self.is_stucked(1e-3)"],
-				[npop, npar, nchi, "False"],
+				[N + 1, NPAR, NCHI, "self.is_stucked(1e-3)"],
+				[NPOP, NPAR, NCHI, "False"],
 			],
-			func,
+			FUNC,
 			"random")
-		result = psa.until(1e-7, max_eval_count)
-		save(psa, result, method_name, name, i)
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 	print()
-	print(N, name, npop, npar, nchi, loop_count, flush = True)
-
+	print(TITLE, flush = True)
 	print("eval counts")
 	for method_name, eval_count in eval_counts.items():
 		print(
 			method_name,
 			np.average(eval_count),
-			loop_count - len(eval_count),
+			LOOP_COUNT - len(eval_count),
 			sep = ","
 		)
-
 	print()
 	print("best fitnesses")
 	for method_name, best_fitness in best_fitnesses.items():
@@ -175,5 +132,21 @@ for problem in PROBLEMS:
 			np.average(best_fitness),
 			sep = ","
 		)
+	print()
+	print("switch")
+	for method_name, adjust_eval_count in adjust_eval_counts.items():
+		try:
+			print(
+				method_name,
+				np.average([a for a in adjust_eval_count if a is not None]),
+				sep = ","
+			)
+		except RuntimeWarning:
+			print(
+				method_name,
+				"(no switch)",
+				sep = ","
+			)
+	print()
 
-	save_once(name, eval_counts, best_fitnesses)
+	save_once(DIRECTORY_NAME, FUNCNAME, eval_counts, best_fitnesses, SAVE_EVAL_COUNTS_CSV, SAVE_BEST_FITNESSES_CSV)

@@ -17,7 +17,7 @@ class PopulationSizeAdjusting:
 		self.adjust_opt = adjust_opt
 		self.problem = problem
 		self.eval_count = 0
-		self.adjust_count = 0
+		self.adjust_eval_count = []
 		self.reserved_population = [Individual(self.n) for i in range(npop_max)]
 		for i in self.reserved_population:
 			i.fitness = self.problem(i.gene)
@@ -44,10 +44,10 @@ class PopulationSizeAdjusting:
 		return sum_ / (l * (l - 1) / 2)
 
 	def adjust_pop_size(self):
-		self.adjust_count += 1
+		self.adjust_eval_count.append(self.eval_count)
 		npop_old = self.npop
 		self.npop, self.npar, self.nchi, self.adjust_trigger =\
-			self.adjust_opt[self.adjust_count]
+			self.adjust_opt[len(self.adjust_eval_count)]
 		if npop_old > self.npop:
 			np.random.shuffle(self.population)
 			self.reserved_population.extend(self.population[self.npop:])
@@ -134,6 +134,11 @@ class PopulationSizeAdjusting:
 			pop.extend(self.reserved_population)
 			pop.sort(key=lambda s: s.fitness if s.fitness else np.inf)
 			return pop[0].fitness
+
+	def get_adjust_eval_count(self):
+		if not self.adjust_eval_count:
+			return [None]
+		return self.adjust_eval_count
 
 	def is_stucked(self, t):
 		if len(self.avg_history) < 3:
