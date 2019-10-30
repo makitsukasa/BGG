@@ -1,22 +1,21 @@
 import os
 
 def get_dir_size(path='.'):
-    total = 0
-    with os.scandir(path) as it:
-        for entry in it:
-            if entry.is_file():
-                total += entry.stat().st_size
-            elif entry.is_dir():
-                total += get_dir_size(entry.path)
-    return total
+	total = 0
+	with os.scandir(path) as it:
+		for entry in it:
+			if entry.is_file():
+				total += entry.stat().st_size
+			elif entry.is_dir():
+				total += get_dir_size(entry.path)
+	return total
 
 def mkdir(path):
 	if os.path.exists(path):
 		entries = os.listdir(path)
-		if entries:
-			raise Exception(path + " already exists and is not an empty directory")
-		# else:
-		# 	pass # do nothing
+		for entry in entries:
+			if os.path.splitext(entry)[1] != ".bat":
+				raise Exception(path + " already exists and is not an empty directory")
 	else:
 		os.mkdir(path)
 
