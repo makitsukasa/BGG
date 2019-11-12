@@ -41,8 +41,10 @@ def save(path, system, result, method_name, problem_name, index, best_fitnesses,
 	# print(system.population[0].gene)
 
 	if SAVE_HISTORY_CSV:
-		filename = path + "/{0}_{1}_{2}.csv"\
-			.format(method_name, problem_name, index)
+		# filename = path + "/{0}_{1}_{2}.csv"\
+			# .format(method_name, problem_name, index)
+		filename = path + "/{0}_{1}.csv"\
+			.format(method_name, index)
 		with open(filename, "w") as f:
 			for c, v in system.history.items():
 				f.write("{0},{1}\n".format(c, v))

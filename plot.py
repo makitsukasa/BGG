@@ -10,6 +10,8 @@ import numpy as np
 font = {"family": "Noto Sans MONO CJK JP"}
 mpl.rc('font', **font)
 plt.rcParams["mathtext.default"] = "regular"
+plt.rcParams["font.size"] = 20
+mpl.rc('figure.subplot', left=0.15, right=0.95, bottom=0.15, top=0.95)
 
 def plot(filenames, ylabel, log_scaled = False):
 	if isinstance(filenames, str):
