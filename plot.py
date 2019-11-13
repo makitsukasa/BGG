@@ -13,7 +13,7 @@ plt.rcParams["mathtext.default"] = "regular"
 plt.rcParams["font.size"] = 20
 mpl.rc('figure.subplot', left=0.15, right=0.95, bottom=0.15, top=0.95)
 
-def plot(filenames, ylabel, log_scaled = False):
+def plot(filenames, ylabel, log_scaled = False, x_max = None):
 	if isinstance(filenames, str):
 		filenames = [filenames]
 
@@ -75,8 +75,10 @@ def plot(filenames, ylabel, log_scaled = False):
 
 	if log_scaled:
 		plt.yscale("log")
+	if x_max is not None:
+		plt.xlim(None, float(x_max))
 	plt.legend()
-	plt.xlabel("評価回数")
+	plt.xlabel("Number of times individuals are evaluated")
 	plt.ylabel(ylabel)
 	plt.show()
 
@@ -84,10 +86,11 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-f", "--files", nargs = "*")
 	parser.add_argument("-l", "--log_scaled", action = "store_true")
-	parser.add_argument("--ylabel", default = "評価値")
+	parser.add_argument("-m", "--max", action = "store")
+	parser.add_argument("--ylabel", default = "Objective function value")
 	args = parser.parse_args()
 	if args.files:
-		plot(args.files, args.ylabel, args.log_scaled)
+		plot(args.files, args.ylabel, args.log_scaled, args.max)
 	else:
 		files = glob.glob('*.csv')
-		plot(files, args.ylabel, args.log_scaled)
+		plot(files, args.ylabel, args.log_scaled, args.max)

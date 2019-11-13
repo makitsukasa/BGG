@@ -36,7 +36,8 @@ def save(path, system, result, method_name, problem_name, index, best_fitnesses,
 		else:
 			eval_counts[method_name] = [system.eval_count]
 	else:
-		print(method_name, "failed")
+		# print(method_name, "failed")
+		pass
 
 	# print(system.population[0].gene)
 
