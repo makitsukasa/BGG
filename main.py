@@ -5,6 +5,7 @@ from PopulationSizeAdjusting import PopulationSizeAdjusting
 from SawTooth import SawTooth
 from problem.frontier.sphere      import sphere
 from problem.frontier.ktablet     import ktablet
+from problem.frontier.rosenbrock  import rosenbrock
 from problem.frontier.bohachevsky import bohachevsky
 # from problem.frontier.ackley      import ackley
 from problem.frontier.schaffer    import schaffer
@@ -22,7 +23,7 @@ SAVE_EVAL_COUNTS_CSV = False
 SAVE_BEST_FITNESSES_CSV = False
 BASE_DIRECTORY_NAME = "benchmark"
 
-N = 50
+N = 20
 MAX_EVAL_COUNT = 40000 * N
 # MAX_EVAL_COUNT = 1000
 LOOP_COUNT = 50
@@ -31,21 +32,24 @@ PROBLEMS = [
 	# n = 20, goal = 1e-7
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "rosenbrock",  "func" : rosenbrock,  "npop" : 16 * N, "nchi" : 8 * N},
+	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 17 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 6 * N},
 
 	# n = 50, goal = 1e-7
-	{"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "sphere",      "func" : sphere,      "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" : 10 * N, "nchi" : 6 * N},
+	# {"name" : "rosenbrock",  "func" : rosenbrock,  "npop" : 15 * N, "nchi" : 8 * N},
 	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 6 * N},
 
+	# sawtooth
 	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin", "func" : rastrigin, "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",    "func" : ackley,    "npop" : 24 * N, "nchi" : 8 * N},
@@ -68,51 +72,51 @@ for problem in PROBLEMS:
 	print(TITLE, flush = True)
 
 	for i in range(LOOP_COUNT):
-		# method_name = "JGG"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[NPOP, NPAR, NCHI, "False"],
-		# 	],
-		# 	FUNC,
-		# 	"random")
-		# result = psa.until(1e-7, MAX_EVAL_COUNT)
-		# save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
-
-		# method_name = "Small"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[N + 1, NPAR, NCHI, "False"],
-		# 	],
-		# 	FUNC,
-		# 	"random")
-		# result = psa.until(1e-7, MAX_EVAL_COUNT)
-		# save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
-
-		# method_name = "Proposed"
-		# psa = PopulationSizeAdjusting(
-		# 	N,
-		# 	[
-		# 		[N + 1, NPAR, NCHI, "self.is_stucked(1e-3)"],
-		# 		[NPOP, NPAR, NCHI, "False"],
-		# 	],
-		# 	FUNC,
-		# 	"random")
-		# result = psa.until(1e-7, MAX_EVAL_COUNT)
-		# save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
-
-		method_name = "UntilSwitch"
+		method_name = "JGG"
 		psa = PopulationSizeAdjusting(
 			N,
 			[
-				[N + 1, NPAR, NCHI, "(len(self.adjust_eval_count)>0)"],
 				[NPOP, NPAR, NCHI, "False"],
 			],
 			FUNC,
 			"random")
 		result = psa.until(1e-7, MAX_EVAL_COUNT)
 		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
+
+		method_name = "Small"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[N + 1, NPAR, NCHI, "False"],
+			],
+			FUNC,
+			"random")
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
+
+		method_name = "Proposed"
+		psa = PopulationSizeAdjusting(
+			N,
+			[
+				[N + 1, NPAR, NCHI, "self.is_stucked(1e-3)"],
+				[NPOP, NPAR, NCHI, "False"],
+			],
+			FUNC,
+			"random")
+		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
+
+		# method_name = "UntilSwitch"
+		# psa = PopulationSizeAdjusting(
+		# 	N,
+		# 	[
+		# 		[N + 1, NPAR, NCHI, "(len(self.adjust_eval_count)>0)"],
+		# 		[NPOP, NPAR, NCHI, "False"],
+		# 	],
+		# 	FUNC,
+		# 	"random")
+		# result = psa.until(1e-7, MAX_EVAL_COUNT)
+		# save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 	print()
 	print(TITLE, flush = True)
