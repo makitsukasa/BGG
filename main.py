@@ -23,7 +23,7 @@ SAVE_EVAL_COUNTS_CSV = False
 SAVE_BEST_FITNESSES_CSV = False
 BASE_DIRECTORY_NAME = "benchmark"
 
-N = 20
+N = 50
 MAX_EVAL_COUNT = 40000 * N
 # MAX_EVAL_COUNT = 1000
 LOOP_COUNT = 50
@@ -33,7 +33,7 @@ PROBLEMS = [
 	# {"name" : "sphere",      "func" : sphere,      "npop" :  6 * N, "nchi" : 6 * N},
 	# {"name" : "k-tablet",    "func" : ktablet,     "npop" :  8 * N, "nchi" : 6 * N},
 	# {"name" : "rosenbrock",  "func" : rosenbrock,  "npop" : 16 * N, "nchi" : 8 * N},
-	{"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
+	# {"name" : "bohachevsky", "func" : bohachevsky, "npop" :  7 * N, "nchi" : 6 * N},
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 10 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 17 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  6 * N, "nchi" : 6 * N},
@@ -47,7 +47,7 @@ PROBLEMS = [
 	# {"name" : "schaffer",    "func" : schaffer,    "npop" : 11 * N, "nchi" : 8 * N},
 	# {"name" : "rastrigin",   "func" : rastrigin,   "npop" : 16 * N, "nchi" : 8 * N},
 	# {"name" : "ackley",      "func" : ackley,      "npop" :  8 * N, "nchi" : 6 * N},
-	# {"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 6 * N},
+	{"name" : "griewangk",   "func" : griewangk,   "npop" :  6 * N, "nchi" : 6 * N},
 
 	# sawtooth
 	# {"name" : "schwefel",  "func" : schwefel,  "npop" : 100 * N, "nchi" : 8 * N},
@@ -80,7 +80,7 @@ for problem in PROBLEMS:
 			],
 			FUNC,
 			"random")
-		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		result = psa.until(-100, MAX_EVAL_COUNT)
 		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		method_name = "Small"
@@ -91,7 +91,7 @@ for problem in PROBLEMS:
 			],
 			FUNC,
 			"random")
-		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		result = psa.until(-100, MAX_EVAL_COUNT)
 		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		method_name = "Proposed"
@@ -103,7 +103,7 @@ for problem in PROBLEMS:
 			],
 			FUNC,
 			"random")
-		result = psa.until(1e-7, MAX_EVAL_COUNT)
+		result = psa.until(-100, MAX_EVAL_COUNT)
 		save(DIRECTORY_NAME, psa, result, method_name, FUNCNAME, i, best_fitnesses, adjust_eval_counts, eval_counts, SAVE_HISTORY_CSV, SAVE_DISTANCE_CSV)
 
 		# method_name = "UntilSwitch"

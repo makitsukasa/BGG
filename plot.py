@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from scipy import stats
 import numpy as np
+import warnings
+
+warnings.simplefilter("error", RuntimeWarning)
 
 font = {"family": "Noto Sans MONO CJK JP"}
 mpl.rc('font', **font)
@@ -33,7 +36,11 @@ def plot(filenames, ylabel, log_scaled = False, x_max = None):
 				datas[method_name] = {}
 			datas[method_name][index] = {}
 			datas[method_name][index]["eval_count"] = list(map(int, x))
-			datas[method_name][index]["fitness"] = y
+			datas[method_name][index]["fitness"] = list(map(float, y))
+
+			if log_scaled:
+				if datas[method_name][index]["fitness"] == 0:
+					datas[method_name][index]["fitness"] = sys.float_info.min
 
 	for method_name, data in datas.items():
 		index = np.argmax([data[i]["eval_count"][-1] for i in range(len(data))])
@@ -56,25 +63,33 @@ def plot(filenames, ylabel, log_scaled = False, x_max = None):
 					i_a = d["eval_count"][near_pin_index[0]]
 					i_b = d["eval_count"][near_pin_index[1]]
 					predicted = a + (b - a) / (i_b - i_a) * (x - i_a)
-					if predicted > 1e-7:
+
+					if log_scaled:
 						data["fitness"][x].append(predicted)
 					else:
-						# data["fitness"][x].append(1e-7)
-						pass
+						if predicted > 1e-7:
+							data["fitness"][x].append(predicted)
+						else:
+							pass
 
 		data["means"] = []
-		data["sems"] = []
+		# data["sems"] = []
 		for i, f in data["fitness"].items():
 			data["means"].append(np.mean(f))
-			data["sems"].append(stats.sem(f))
-		plt.errorbar(
+		# 	# data["sems"].append(stats.sem(f))
+		plt.plot(
 			data["eval_count"],
 			data["means"],
-			yerr = data["sems"],
 			label = method_name)
+		# plt.errorbar(
+		# 	data["eval_count"],
+		# 	data["means"],
+		# 	# yerr = data["sems"],
+		# 	label = method_name)
 
 	if log_scaled:
 		plt.yscale("log")
+		plt.ylim(1e-8, None)
 	if x_max is not None:
 		plt.xlim(None, float(x_max))
 	plt.legend()
